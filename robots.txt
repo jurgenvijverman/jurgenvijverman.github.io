@@ -1,0 +1,31 @@
+# AVYclima - robots.txt
+# https://avyclima.be/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://avyclima.be/sitemap.xml
+
+# LLM guidance files
+# See https://avyclima.be/llms.txt
+# See https://avyclima.be/llms-full.txt
+
+# Allow AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
