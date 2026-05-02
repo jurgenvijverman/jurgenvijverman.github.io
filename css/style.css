@@ -30,36 +30,37 @@
 }
 
 /* --- CSS Custom Properties --- */
+/* Aligned to live avyclima.be brand on 2026-05-02 — see skills/avyclima-site-edits/references/brand-identity.md */
 :root {
-  /* Brand Colors - Professional HVAC / Daikin partnership feel */
-  --primary: #0057a8;
-  --primary-dark: #003d75;
-  --primary-light: #e8f1fa;
-  --accent: #00b4d8;
-  --accent-dark: #0096b7;
+  /* Brand Colors — monochrome ink + single cyan accent (matches live) */
+  --primary: #3a3a3a;          /* dark ink — main filled buttons, links, theme-color */
+  --primary-dark: #2a2a2a;     /* darker ink for hover */
+  --primary-light: #f7f9fa;    /* off-white surface — replaces old blue tint */
+  --accent: #54d2eb;           /* live cyan — the only chromatic accent */
+  --accent-dark: #3fc0db;      /* darker cyan for hover */
   --white: #ffffff;
-  --gray-50: #f8f9fa;
+  --gray-50: #f7f9fa;
   --gray-100: #f1f3f5;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-400: #adb5bd;
   --gray-500: #6c757d;
-  --gray-600: #495057;
-  --gray-700: #343a40;
-  --gray-800: #212529;
+  --gray-600: #5e5e5e;
+  --gray-700: #404040;
+  --gray-800: #3a3a3a;
   --success: #28a745;
   --warning: #f0ad4e;
   --danger: #dc3545;
 
-  /* Typography */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography — Montserrat per live brand */
+  --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 
   /* Spacing */
   --section-padding: 5rem 0;
   --container-width: 1200px;
-  --border-radius: 8px;
-  --border-radius-lg: 12px;
+  --border-radius: 12px;       /* matches dominant live radius */
+  --border-radius-lg: 16px;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
@@ -86,7 +87,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--gray-700);
+  color: var(--gray-800);
   line-height: 1.7;
   background: var(--white);
   -webkit-font-smoothing: antialiased;
@@ -322,17 +323,21 @@ p {
 }
 
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
   text-decoration: none;
+  line-height: 0;
 }
 
-.logo span {
-  color: var(--accent);
+.logo img {
+  display: block;
+  height: 40px;          /* fits the 72px header with 16px breathing room top/bottom */
+  width: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .logo img { height: 32px; }
 }
 
 .nav {
@@ -404,36 +409,29 @@ p {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* --- Hero Section --- */
+/* --- Hero Section ---
+   Live brand uses a dimmed photo (rgba(58,58,58,0.8) overlay) over a hero JPEG.
+   Until a hero photo is dropped into images/, we render a flat dark-ink background
+   that matches the overlay tint. Swap to the photo+overlay pattern below once
+   images/hero.jpg exists.
+*/
 .hero {
   padding: 8rem 0 5rem;
-  background: linear-gradient(135deg, var(--primary) 0%, #003d75 100%);
+  background: var(--primary);
   color: var(--white);
   position: relative;
   overflow: hidden;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(0,180,216,0.15) 0%, transparent 70%);
-  border-radius: 50%;
+/* Photo+overlay alternative — uncomment and supply images/hero.jpg to enable.
+.hero {
+  background-image:
+    linear-gradient(rgba(58, 58, 58, 0.8), rgba(58, 58, 58, 0.8)),
+    url("../images/hero.jpg");
+  background-size: cover;
+  background-position: center;
 }
-
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -30%;
-  left: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-  border-radius: 50%;
-}
+*/
 
 .hero .container {
   position: relative;
@@ -474,7 +472,7 @@ p {
 /* Page Hero (for subpages) */
 .page-hero {
   padding: 8rem 0 3rem;
-  background: linear-gradient(135deg, var(--primary) 0%, #003d75 100%);
+  background: var(--primary);
   color: var(--white);
   text-align: center;
 }

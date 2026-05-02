@@ -2,3 +2,6 @@
 .claude/
 node_modules/
 *.pyc
+
+# Working source assets — not in production yet
+pictures&logos/
