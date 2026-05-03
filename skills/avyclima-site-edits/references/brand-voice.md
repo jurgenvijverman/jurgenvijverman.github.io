@@ -16,9 +16,9 @@ The site is written in **Belgian Dutch** for a regional Belgian audience (East F
 
 - **`AVYclima`** — uppercase A-V-Y, lowercase clima, no space. The HTML logo splits it as `AVY<span>clima</span>` for visual styling but it's read as one word.
 - Founded 2013, based in **Denderleeuw**.
-- Founder: **Ayoub Vijverman**, "Oprichter & Hoofdtechnicus".
+- Founder: **Arne Vijverman**, "Oprichter & Hoofdtechnicus".
 - Always "wij / ons / onze" when speaking as the company. Never "ik" except in a quoted testimonial.
-- Avoid "het team" or "ons team" filler — be specific where possible ("onze monteurs", "Ayoub", "onze technici").
+- Avoid "het team" or "ons team" filler — be specific where possible ("onze monteurs", "Arne", "onze technici").
 
 ## Trust signals to use freely
 

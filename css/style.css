@@ -1437,6 +1437,20 @@ body.hero-over-ons .page-hero {
   color: var(--gray-400);
 }
 
+/* Defensive: any link inside the dark footer paragraph stays readable.
+   Without this, links inherit the global `a { color: var(--primary) }` rule,
+   which is #3a3a3a — exactly the footer background. Caught by QA check
+   `check_dark_footer_links` in scripts/site_qa.py. */
+.footer-about p a,
+.footer-bottom p a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.footer-about p a:hover,
+.footer-bottom p a:hover {
+  color: var(--accent-dark);
+}
+
 .footer-links a {
   display: block;
   padding: 0.35rem 0;

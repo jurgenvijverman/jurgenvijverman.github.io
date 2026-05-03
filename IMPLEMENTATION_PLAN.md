@@ -448,6 +448,28 @@ Update `skills/avyclima-site-edits/references/known-issues.md` as items close. T
 | 3. Content quality upgrade | ~1 week | No |
 | 4. Technical SEO + QA tooling | ~1 week | No |
 | 5. Conversion + analytics | 3–5 days | — |
+| 6. Quality-review response (founding-date / fake-testimonials / unverified-cert / Dutch language consistency — see [`IMPLEMENTATION_PLAN_PHASE6.md`](./IMPLEMENTATION_PLAN_PHASE6.md)) | ~1 day | — |
 | **Total** | **~3 weeks of focused work** | |
 
 Compressible to ~2 weeks if Phase 3 and Phase 4 run in parallel.
+
+---
+
+## Status (2026-05-03)
+
+All six phases are **complete**. The site QA gate (`scripts/site_qa.py`, wired in CI) enforces 17 checks on 36 HTML files; current state passes all 17 checks with one documented content-debt waiver (`blog/airco-als-verwarming.html`).
+
+| Phase | Status | One-line outcome |
+|---|---|---|
+| 1 | ✅ | 18 typos, 38 risky claims, Review JSON-LD + fake testimonials removed; 4-card trust block added |
+| 2 | ✅ | 3 new Denderleeuw pages, werkgebied tiered, homepage repositioned, footer site-wide |
+| 3 | ✅ | warmtepomp.html rewritten in 9 sections; Voorbeeldproject content on all 16 city pages; faq.html tightened |
+| 4 | ✅ | meta keywords stripped; JSON-LD validated; broken links fixed; alt-text verified; `scripts/site_qa.py` + GitHub Action live |
+| 5 | ✅ | CTAs varied per page type; contact form lead-quality fields; Plausible analytics + custom events; GSC setup guide |
+| 6 | ✅ | Founding date corrected to 2024; founder name Arne; all fake testimonials removed; unverified certifications dropped; full Dutch hyphenation + sentence-case pass; Phase 6 plan in [`IMPLEMENTATION_PLAN_PHASE6.md`](./IMPLEMENTATION_PLAN_PHASE6.md) |
+
+Carry-overs (tracked in `skills/avyclima-site-edits/references/known-issues.md`):
+- `blog/airco-als-verwarming.html` informal "je" voice — full rewrite still needed (waivered in CI)
+- 4 drifted blog posts with non-canonical chrome — rewrite or template-clone in a future round
+- Real installation photos to replace placeholders in `images/installations/`
+- Plausible account signup + GSC verification (user-side, see `docs/analytics-and-search-console.md`)

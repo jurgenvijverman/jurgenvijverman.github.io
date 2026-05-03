@@ -6,8 +6,8 @@ Photos and images needed for the website. All images should be high quality, wel
 
 ## Priority 1 — Essential (needed now)
 
-- [ ] **Team photo** — Ayoub + team in AVYclima branded clothing or at a worksite. For the "Ons Team" section on the about page. (Ideal: 800x600px or wider)
-- [ ] **Ayoub portrait** — Professional headshot of the founder for the team card. (Ideal: 400x400px, square crop)
+- [ ] **Team photo** — Arne + team in AVYclima branded clothing or at a worksite. For the "Ons Team" section on the about page. (Ideal: 800x600px or wider)
+- [ ] **Arne portrait** — Professional headshot of the founder for the team card. (Ideal: 400x400px, square crop)
 - [ ] **Hero background** — Wide shot of a finished installation, a clean home interior with visible airco unit, or the team at work. For homepage hero section. (Ideal: 1920x800px)
 
 ## Priority 2 — Service Pages

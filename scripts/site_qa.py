@@ -74,6 +74,57 @@ RISKY_CLAIM_PATTERNS = [
     (r"tot 50% lagere", "tot 50% lagere"),
 ]
 
+# ---------------------------------------------------------------------------
+# Phase 6 additions — quality-review safeguards
+# ---------------------------------------------------------------------------
+
+# Founding-date / fake-numbers / contradicts-2024-founding-story
+# AVYclima was founded in 2024. Any of these patterns means a stale claim.
+FOUNDING_DATE_BLACKLIST = [
+    "Sinds 2013", "In 2013",
+    '"foundingDate": "2013"',
+    "3.500+", "3500+",
+    "1.250+", "1250+",
+    "vijf gekwalificeerde", "vijf HVAC-professionals", "vijf professionals",
+    "100 jaren HVAC", "honderd jaren HVAC",
+    "meer dan tien jaar", "meer dan 10 jaar",
+    "honderden airco's", "honderden installaties",
+]
+
+# Unverified certification names — none are documented (per Phase 6 decision).
+# Replace with generic "geschoolde HVAC-specialisten" wording.
+UNVERIFIED_CERT_BLACKLIST = [
+    "Daikin D1+ Installer",
+    "Koeltechnisch Bekwaamheidscertificaat",
+    "VEA Erkenning", "VEA erkenning", "VEA-erkenning",
+]
+
+# Style / hyphenation / language-quality patterns from review section 3.
+# Catch sloppy Dutch the moment it slips back in.
+STYLE_BLACKLIST = [
+    (r"\bHQ\b",                   "HQ → thuisbasis"),
+    (r"\bwarranty\b",             "warranty → garantie"),
+    (r"state-of-the-art",         "state-of-the-art → actuele/moderne"),
+    (r"\bKMO['']?s\b",            "KMO's → kmo's"),
+    (r"\bDaikin Specialist\b",    "Daikin Specialist → Daikin-specialist"),
+    (r"\bDaikin airco\b",         "Daikin airco → Daikin-airco (hyphen)"),
+    (r"\bDaikin warmtepomp\b",    "Daikin warmtepomp → Daikin-warmtepomp (hyphen)"),
+    (r"\bairco installatie\b",    "airco installatie → airco-installatie"),
+    (r"\bwarmtepomp installatie\b", "warmtepomp installatie → warmtepompinstallatie"),
+    (r"\bsplit airco\b",          "split airco → split-airco"),
+    (r"\bmultisplit airco\b",     "multisplit airco → multisplit-airco"),
+    (r"\blucht/lucht\b",          "lucht/lucht → lucht-lucht"),
+    (r"\blucht/water\b",          "lucht/water → lucht-water"),
+    (r"\bOpeningstijden\b",       "Openingstijden → Openingsuren (NL-BE)"),
+]
+
+# Named-testimonial guard: any <cite> containing a "Name X." attribution
+# (where X is a single capital letter followed by a period). Real future
+# testimonials with full attribution should add a documented waiver.
+NAMED_TESTIMONIAL_RE = re.compile(
+    r'<cite[^>]*>[^<]*\b[A-Z][a-zëéè]+\s+[A-Z]\.[^<]*</cite>'
+)
+
 # Informal pronouns are checked outside <script> blocks only
 INFORMAL_PRONOUN_RE = re.compile(r"\b(je|jij|jouw|jullie)\b")
 
@@ -142,6 +193,99 @@ class Result:
     @property
     def has_failures(self) -> bool:
         return bool(self.failures)
+
+
+def check_founding_date_claims(files: list[Path], r: Result) -> None:
+    hits: list[str] = []
+    for f in files:
+        s = f.read_text(encoding="utf-8")
+        for term in FOUNDING_DATE_BLACKLIST:
+            if term in s:
+                hits.append(f"{relative_html_path(f)}: '{term}'")
+    if hits:
+        r.fail(f"Stale founding-date / fake-numbers claims ({len(hits)}):")
+        for h in hits:
+            r.fail(f"  {h}")
+    else:
+        r.ok(f"Founding-date / fake-numbers blacklist clean ({len(FOUNDING_DATE_BLACKLIST)} terms).")
+
+
+def check_unverified_certs(files: list[Path], r: Result) -> None:
+    hits: list[str] = []
+    for f in files:
+        s = f.read_text(encoding="utf-8")
+        for term in UNVERIFIED_CERT_BLACKLIST:
+            if term in s:
+                hits.append(f"{relative_html_path(f)}: '{term}'")
+    if hits:
+        r.fail(f"Unverified certification names ({len(hits)}):")
+        for h in hits:
+            r.fail(f"  {h}")
+    else:
+        r.ok("No unverified certification names (D1+ / KVB / VEA).")
+
+
+def check_style(files: list[Path], r: Result) -> None:
+    hits: list[str] = []
+    for f in files:
+        s = f.read_text(encoding="utf-8")
+        for pattern, label in STYLE_BLACKLIST:
+            for m in re.finditer(pattern, s):
+                hits.append(f"{relative_html_path(f)}: [{label}] at offset {m.start()}")
+    if hits:
+        r.fail(f"Dutch style / hyphenation violations ({len(hits)}):")
+        for h in hits[:40]:
+            r.fail(f"  {h}")
+        if len(hits) > 40:
+            r.fail(f"  … and {len(hits)-40} more")
+    else:
+        r.ok(f"Dutch style + hyphenation clean ({len(STYLE_BLACKLIST)} patterns).")
+
+
+def check_dark_footer_links(files: list[Path], r: Result) -> None:
+    """Detect <a> tags inside .footer-about <p> blocks. Without an explicit
+    color override, those links inherit the global link color (#3a3a3a), which
+    matches the footer background and makes the link text invisible.
+
+    css/style.css now has a `.footer-about p a` rule overriding to --accent;
+    this check is a belt-and-braces defense in case that rule gets removed.
+    """
+    hits: list[str] = []
+    footer_about_re = re.compile(r'<div class="footer-about">.*?</div>', re.S)
+    link_in_p_re = re.compile(r'<p\b[^>]*>.*?<a\b.*?</a>.*?</p>', re.S)
+    for f in files:
+        s = f.read_text(encoding="utf-8")
+        for fb in footer_about_re.finditer(s):
+            for lp in link_in_p_re.finditer(fb.group(0)):
+                hits.append(f"{relative_html_path(f)}: <a> inside footer-about <p>")
+                break  # one report per file is enough
+            else:
+                continue
+            break
+    if hits:
+        r.fail(
+            f"Links inside footer-about <p> ({len(hits)} files) — these inherit the global "
+            f"link color and become invisible against the dark footer. "
+            f"Either unwrap them or rely on the .footer-about p a CSS rule:"
+        )
+        for h in hits:
+            r.fail(f"  {h}")
+    else:
+        r.ok("No bare <a> inside footer-about <p> (no dark-on-dark link risk).")
+
+
+def check_named_testimonials(files: list[Path], r: Result) -> None:
+    hits: list[str] = []
+    for f in files:
+        s = f.read_text(encoding="utf-8")
+        for m in NAMED_TESTIMONIAL_RE.finditer(s):
+            hits.append(f"{relative_html_path(f)}: {m.group(0)[:120]}")
+    if hits:
+        r.fail(f"Named-testimonial pattern (Name X. attribution) found ({len(hits)}):")
+        for h in hits:
+            r.fail(f"  {h}")
+    else:
+        r.ok("No named-testimonial attributions.")
 
 
 def check_typos(files: list[Path], r: Result) -> None:
@@ -435,6 +579,11 @@ def main() -> int:
 
     check_typos(files, r)
     check_risky_claims(files, r)
+    check_founding_date_claims(files, r)
+    check_unverified_certs(files, r)
+    check_style(files, r)
+    check_named_testimonials(files, r)
+    check_dark_footer_links(files, r)
     check_informal_pronouns(files, r)
     check_single_h1(files, r)
     check_titles_and_descriptions(files, r)
