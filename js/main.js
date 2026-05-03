@@ -93,7 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
       contactForm.parentElement.insertBefore(successMsg, contactForm);
       contactForm.style.display = 'none';
 
-      // Fire GA4 event on confirmed successful submission
+      // Fire Plausible custom event on confirmed successful submission
+      if (typeof plausible === 'function') {
+        plausible('Lead', { props: { source: 'contact_form' } });
+      }
+      // Legacy GA4 path — kept harmless even if gtag isn't loaded
       if (typeof gtag === 'function') {
         gtag('event', 'generate_lead', {
           event_category: 'contact',
@@ -181,9 +185,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // --- Phone click tracking (GA4 ready) ---
+  // --- Phone + email click tracking (Plausible + legacy GA4) ---
   document.querySelectorAll('a[href^="tel:"]').forEach(function (link) {
     link.addEventListener('click', function () {
+      if (typeof plausible === 'function') {
+        plausible('Phone Click', { props: { href: link.getAttribute('href') } });
+      }
       if (typeof gtag === 'function') {
         gtag('event', 'click_to_call', {
           event_category: 'contact',
@@ -193,9 +200,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // --- Form submit tracking (GA4 ready) ---
-  // Note: GA4 generate_lead event now fires on confirmed submission only
-  // (via ?verzonden=1 redirect from Formsubmit.co), not on raw form submit.
-  // This prevents false positives from validation failures or abandoned submissions.
+  document.querySelectorAll('a[href^="mailto:"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (typeof plausible === 'function') {
+        plausible('Email Click', { props: { href: link.getAttribute('href') } });
+      }
+      if (typeof gtag === 'function') {
+        gtag('event', 'click_to_email', {
+          event_category: 'contact',
+          event_label: link.getAttribute('href')
+        });
+      }
+    });
+  });
+
+  // --- Form submit tracking ---
+  // Note: the 'Lead' event fires on confirmed submission only (via ?verzonden=1
+  // redirect from Formsubmit.co), not on raw form submit — prevents false positives
+  // from validation failures or abandoned submissions.
 
 });

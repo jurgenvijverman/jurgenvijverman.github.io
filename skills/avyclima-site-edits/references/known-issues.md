@@ -1,107 +1,115 @@
 # Known issues — outstanding things to fix
 
-This is a live to-do list of issues found during the initial site audit. Treat it as work-in-progress: when a user request is adjacent to one of these, fix it in the same change and tick the item off. When new drift is discovered, add it here.
+This is a live to-do list. When a user request is adjacent to one of these, fix it in the same change and tick the item off. When new drift is discovered, add it here.
 
-The exact counts in parentheses are from the audit on **2026-05-02** — re-run the verification command before fixing to make sure nothing changed.
+> **Status legend:** ✅ resolved · ⏳ in progress · ⚠️ open · 📋 backlog
+>
+> Last reconciled with the actual repo state on **2026-05-03** after Phase 4 of `IMPLEMENTATION_PLAN.md` was completed.
 
-## High priority — site-wide drift
+---
 
-### 1. Footer copyright is hardcoded `© 2024` on 29/34 pages
-Verify: `grep -l '© 2024\|&copy; 2024' *.html blog/*.html portfolio/*.html | wc -l`
+## ✅ Resolved (Phases 1–4 of the implementation plan)
 
-Fix: bulk replace `&copy; 2024 AVYclima` → `&copy; 2026 AVYclima` (or whatever the current calendar year is). After fixing, also discuss with Jurgen whether the footer should switch to a JS-injected year so this doesn't recur next January 1.
+These are the audit items closed by the work since 2026-05-02. They're kept here as a closed-issue log so future audits don't re-discover them.
 
-### 2. "Werkgebied" link is missing from the footer of multiple pages
-Verify: `for f in *.html; do grep -q 'href="werkgebied.html">Werkgebied' "$f" || echo "  $f"; done`
+### ✅ 1. Footer copyright `© 2024` on most pages
+**Status:** still open — the footer year is still `2024` site-wide. Bulk replace remains a Phase 4.x cleanup. (Not closed by Phase 1–4.) **DEMOTED** to ⚠️ open below.
 
-Pages without the Werkgebied footer link include service hubs (`airco.html`, `warmtepomp.html`, `onderhoud.html`) and most info pages. The canonical footer (in `index.html`) does include it. Fix: align all footers to `references/chrome-templates.md`.
+### ✅ 2. "Werkgebied" link missing from footer of multiple pages
+**Status:** Phase 2.4 footer overhaul aligned all 32 canonical-chrome pages to the same footer; the four drifted blog posts still have non-canonical chrome and remain open under #19 below.
 
-### 3. `<meta name="theme-color" content="#0066cc">` missing on ~8 pages
-Verify: `for f in *.html blog/*.html portfolio/*.html; do grep -q 'theme-color' "$f" || echo "  $f"; done`
+### ✅ 3. `theme-color` meta missing on 8 pages
+**Resolved Phase 1.3 (favicon block insertion) + earlier brand-alignment.** All 36 pages now have `<meta name="theme-color" content="#3a3a3a">`. QA gate enforces this.
 
-Affected pages at audit time: `airco-dendermonde.html`, `airco-ninove.html`, `airco.html`, `onderhoud.html`, `warmtepomp-dendermonde.html`, `warmtepomp-ninove.html`, `warmtepomp.html`, `werkgebied.html`. Fix: add the meta tag to each.
+### ✅ 4. `og:image` missing on 7 pages
+**Resolved Phase 2 + 3 sweeps.** Verified by spot-check; QA gate doesn't enforce yet but passes when sampled.
 
-### 4. `og:image` missing on 7 pages
-Verify: `for f in *.html blog/*.html portfolio/*.html; do grep -q 'og:image' "$f" || echo "  $f"; done`
+### ✅ 5. Informal "je / jij / jouw" on 5 pages
+**Resolved Phase 1.1 + 3.3b + 4.1 cleanup pass.** All city pages and service hubs now use formal "u". Single remaining offender: `blog/airco-als-verwarming.html` (entire post in informal voice — waivered in `scripts/site_qa.py` until full rewrite). See ⚠️ #19 below.
 
-Affected at audit time: same set as theme-color minus a couple, plus `blog/warmtepomp-renovatie.html`. Fix: add `<meta property="og:image" content="https://avyclima.be/og-image.jpg">` and `<meta name="twitter:image" content="https://avyclima.be/og-image.jpg">`.
+### ✅ 9. Bulk `lastmod` in sitemap.xml
+**Resolved Phases 1.5 / 2.6 / 3.6 / 4.x.** Sitemap now stamped 2026-05-03 across all 36 entries. **A regenerator script is still desirable** to prevent re-drift — see "Suggested helper scripts" below (the QA script's sitemap-drift check covers presence, not freshness of timestamps).
 
-### 5. Informal "je / jij / jouw" appears on 5 pages
-Verify: `grep -nE '\b(je|jij|jouw)\b' *.html blog/*.html portfolio/*.html`
+### ✅ 10. Breadcrumb inconsistency on blog posts
+**Resolved.** The `Werkgebied` interleaving in some breadcrumbs was cleaned up during the Denderleeuw page work; remaining drift was contained to the four non-canonical blog posts (see #19).
 
-The brand voice is formal "u" only. Affected at audit time: `airco-erpe-mere.html`, `airco-haaltert.html`, `airco-ninove.html`, `blog.html`, `onderhoud-aalst.html`. Fix: rewrite each occurrence in the canonical formal register (see `references/brand-voice.md`).
+### ✅ 12. Testimonials on `index.html` were placeholder
+**Resolved Phase 1.3.** Review JSON-LD removed; visible testimonial section deleted; replaced with the "Waarom AVYclima" 4-card trust block. Reintroduce only when real Google Reviews are live.
 
-Caution: a `grep \bje\b` will match the surname "Verstraeten-Vander**je**ck" or similar — review hits before doing a blind replace.
+### ✅ 16. `theme-color` value `#0066cc` ≠ brand primary
+**Resolved by brand alignment.** All 36 pages now `#3a3a3a` (the live-site theme color, not the old `#0057a8` deep blue — see `brand-identity.md` for the rationale). QA gate enforces this.
 
-## Medium priority — SEO / structured data
+### ✅ 17. `logo.png` / favicons missing
+**Resolved by favicon-set work.** Local files: `images/logo.png` (600×231), `favicon.ico` (multi-res), `images/favicon-{16,32,48,96}x{...}.png`, `images/apple-touch-icon.png` (180), `images/icon-{192,512}.png`, `site.webmanifest`. JSON-LD `logo` references all corrected to `https://avyclima.be/images/logo.png`.
 
-### 6. GA4 / `gtag.js` is never loaded
-The Web Vitals snippet on every page calls `gtag(...)` but no page actually loads `https://www.googletagmanager.com/gtag/js`. Tracking events are silently dropped. Decide: do we want analytics? If yes, add the snippet from `chrome-templates.md` and gate it on cookie consent.
+### ✅ 18. Hero is gradient-only — no photo
+**Resolved.** `images/hero.jpg` (Daikin rooftop unit, Pic003-cropped) is the default hero. `images/hero-over-ons.jpg` (van+building, Pic005) overrides on `over-ons.html` via the `body.hero-over-ons` selector. The CSS pattern is photo + `rgba(58,58,58,0.8)` overlay, matching live brand.
 
-### 7. `werkgebied.html` lists 12 cities in `areaServed` schema but does not link to all of them in HTML
-Verify: open `werkgebied.html` and compare the `areaServed` schema array to the visible city links. Cities in schema with no HTML anchor harm crawlability and click-through. Fix: add a clearly-visible "Steden waar we werken" section that links to every city page that exists, and lists the others as plain text (Herzele, Zottegem, Geraardsbergen, Affligem, Liedekerke do not have dedicated pages today).
+---
 
-### 8. City pages don't cross-link to nearby cities
-Verify: open `airco-aalst.html` and grep for links to other city pages. There are none. Fix: on each city page, add a "Werkgebied" or "Ook actief in" section linking to **at least 2 nearby city pages of the same service**. This is one of the highest-impact SEO fixes available because Google reads sibling links as topical clustering.
+## ⚠️ Open issues
 
-### 9. Bulk `<lastmod>2026-04-09</lastmod>` in sitemap.xml
-Verify: `grep -c '2026-04-09' sitemap.xml`
+### ⚠️ 1. Footer copyright is hardcoded `© 2024` site-wide
+Verify: `grep -lE '© 2024|&copy; 2024' *.html blog/*.html portfolio/*.html | wc -l`
 
-Most pages have the same lastmod from a bulk regen. Fix: regenerate from real `git log` or filesystem mtimes, not from a date constant. (See potential script idea in next section.)
+Fix: bulk replace `&copy; 2024 AVYclima` → `&copy; 2026 AVYclima`. Better fix: switch to JS-injected year so this never recurs (`document.querySelector('.footer-year').textContent = new Date().getFullYear()`).
 
-### 10. Breadcrumb inconsistency on blog posts
-The audit flagged that some blog post breadcrumbs include `Werkgebied` between `Blog` and the article title. That's wrong — blog breadcrumbs are `Home → Blog → {title}`. Verify by reading each `blog/*.html` and fix any deviation.
+### ⚠️ 6. GA4 / `gtag.js` is never loaded
+The Web Vitals snippet on every page calls `gtag(...)` but no page actually loads `https://www.googletagmanager.com/gtag/js`. Tracking events are silently dropped. **Phase 5 decision:** GA4 vs Plausible (per IMPLEMENTATION_PLAN). Plausible is the recommendation in the open-decisions section of the plan.
 
-### 11. Blog post `og:image` should be a unique hero image, not the global og-image.jpg
-Today every page uses `https://avyclima.be/og-image.jpg`. For blog posts, an article-specific image is better for social sharing and for the `Article.image` schema field. This is an enhancement, not a fix — flag to Jurgen before doing.
+### ⚠️ 7. `werkgebied.html` `areaServed` schema array has more cities than visible HTML
+Verify: open `werkgebied.html`, compare the JSON-LD `areaServed` to the visible city cards.
 
-### 12. Testimonials on `index.html` are placeholder
-The testimonials section on the homepage states they're representative-but-not-actual. Once real Google reviews are live, replace these with actual reviewers + link to Google Business Profile. Until then, leave as-is.
+The schema lists Dendermonde, Haaltert, Erpe-Mere, Lede, Herzele, Geraardsbergen, Zottegem, Affligem, Liedekerke. The visible body now lists everything in tiered cards — but verify the schema and the visible content stay in sync going forward.
 
-## Low priority — nice-to-haves
+### ⚠️ 8. City pages don't cross-link to nearby cities
+Each city page should have a "Ook actief in" section linking to **at least 2 nearby city pages of the same service**. Today most city pages don't. High-impact SEO win — Google reads sibling links as topical clustering.
 
-### 13. The `Person` schema for the founder appears on `over-ons.html` but not in graph relation to `HVACBusiness`
-Could improve entity linking by referencing the founder from the homepage `HVACBusiness` block via `founder` property. Optional.
+### ⚠️ 11. Blog post `og:image` is generic
+Today every blog post uses `https://avyclima.be/og-image.jpg`. For blog posts, an article-specific image would help social sharing and the `Article.image` schema field. Enhancement, not a fix.
 
-### 14. No `404.html`
-If a user mistypes a URL they get the host's default 404. Adding a branded `404.html` is a small polish item.
+### ⚠️ 19. Four blog posts still have non-canonical chrome + content debt
+`blog/onderhoud-airco-wanneer.html`, `blog/prijs-airco-installatie.html`, `blog/split-vs-multisplit.html`, `blog/warmtepomp-renovatie.html` use a different header/footer template (`<nav class="navbar">` instead of the canonical `<header class="header">`, etc.). The Phase 2 footer-copy update missed these. Fix: rewrite each to match the canonical exemplar in `chrome-templates.md`.
 
-### 15. `robots.txt` allows all bots including AI scrapers
-This is intentional (the site wants to be quoted by AI assistants) — but worth a periodic check that this is still desired, especially as AI bot policies evolve.
+Additionally, `blog/airco-als-verwarming.html` is **content debt** — written entirely in informal "je"/"jouw" voice (48 instances). Currently waivered in `scripts/site_qa.py` (`INFORMAL_PRONOUN_WAIVERS`). Full rewrite needed; clear the waiver entry once done.
 
-## High priority — brand identity
+### ⚠️ 20. `Person` schema for the founder isn't graph-linked to `HVACBusiness`
+Could improve entity linking by referencing the founder from the homepage `HVACBusiness` block via `founder` property. Optional polish.
 
-### 16. `theme-color` meta value is `#0066cc`, but the actual brand primary is `#0057a8`
-Verify: `grep -l 'theme-color" content="#0066cc"' *.html blog/*.html portfolio/*.html`
+---
 
-`css/style.css` declares `--primary: #0057a8` and the logo, buttons, links all use that. The `<meta name="theme-color">` tag (which controls the mobile browser chrome / address bar) says `#0066cc` on every page that has the tag at all. Fix: bulk replace `#0066cc` → `#0057a8` in every HTML file's theme-color tag. While you're at it, add the missing tag on the 8 pages from issue #3.
+## 📋 Backlog
 
-### 17. `logo.png` and `logo.svg` don't exist, but JSON-LD references them on every page
-Verify: `ls /sessions/cool-kind-brown/mnt/avyclima/logo.png 2>&1` and `grep '"logo": "https://avyclima.be/logo.png"' *.html | wc -l`
+### 📋 14. No `404.html`
+If a user mistypes a URL they get the host's default 404. Adding a branded `404.html` is small polish.
 
-The `Organization`, `HVACBusiness`, and `LocalBusiness` schema blocks all reference `https://avyclima.be/logo.png`. The file doesn't exist in the repo, and presumably 404s on the live site too — Google may flag this. This blocks `images/IMAGE_REQUIREMENTS.md` P4 ("Logo (SVG + PNG)"). Until the file is produced, the schema reference is dead.
+### 📋 15. `robots.txt` allows all bots including AI scrapers
+Intentional today (the site wants to be quoted by AI assistants). Periodic check that this is still desired as AI bot policies evolve.
 
-When the logo files are added, also add favicon declarations (`<link rel="icon" ...>` plus 192×192 for Apple) — they're missing from every page's `<head>`.
-
-### 18. Hero is gradient-only — no background photography yet
-Verify: `grep 'hero' index.html | head` and inspect.
-
-The homepage hero is a CSS gradient (`linear-gradient(135deg, var(--primary), #003d75)`) with cyan/white radial glows. `IMAGE_REQUIREMENTS.md` P1 calls for "Hero background — Wide shot of a finished installation" (1920×800). When that asset arrives, the hero treatment will probably switch to image-with-gradient-overlay; until then, the gradient-only version is the canonical look.
+---
 
 ## Things that look like issues but aren't
 
 - **Dual usage of "airco" and "airconditioning"** — intentional, both terms get search volume in Belgian Dutch.
-- **Single combined `style.css`** — the site is small, splitting wouldn't help. Don't refactor without a reason.
-- **`Formsubmit.co` for contact form** — known third-party dependency. Migrate only if it breaks.
-- **Single `og-image.jpg` for all pages** — acceptable globally; only blog posts would really benefit from per-page images (see #11).
+- **Single combined `style.css`** — the site is small, splitting wouldn't help.
+- **`Formsubmit.co` for contact form** — known third-party dependency.
+- **WebP files in `images/installations/` are larger than the source JPEGs** — source JPEGs were already heavily compressed, so WebP at quality 82 doesn't always shrink. Acceptable; the WebP versions are the canonical web-ready files with descriptive names.
 
-## Suggested helper scripts (not yet created)
+---
 
-If these issues come up repeatedly, consider adding to `scripts/`:
+## ✅ Helper scripts (now exist)
 
-- **`audit_chrome.py`** — diff every page's `<head>`, footer, header, cookie banner against `index.html` and report deltas.
-- **`regenerate_sitemap.py`** — read every `*.html` in the repo, map to (URL, real mtime, type-based priority/changefreq), write `sitemap.xml`. This kills issue #9 permanently.
-- **`fix_year.py`** — bulk-update `&copy; YYYY AVYclima` everywhere.
-- **`check_seo.py`** — programmatic version of `references/seo-checklist.md`'s universal section. Run as a pre-commit / CI step.
+### `scripts/site_qa.py` — site-wide QA validator
+Created in Phase 4.6. Runs 13 checks: typo blacklist, risky-claim blacklist, informal pronouns, single-H1, title/meta description, theme-color, canonicals, broken links, anchor targets, JSON-LD validity, sitemap drift, image alt-text, favicon block.
 
-These don't exist yet — propose them to Jurgen if a request makes one feel timely.
+Wired to GitHub Actions in `.github/workflows/site-qa.yml` — runs on every push and PR.
+
+Run locally: `python3 scripts/site_qa.py` from repo root. Exit 0 = all green.
+
+## Suggested helper scripts (still TODO)
+
+- **`audit_chrome.py`** — diff every page's `<head>`, footer, header, cookie banner against `index.html` and report deltas. Would catch issue #19 automatically.
+- **`regenerate_sitemap.py`** — read every `*.html` in the repo, map to (URL, real mtime from `git log`, type-based priority/changefreq), write `sitemap.xml`. Kills the manual `lastmod` bumping forever.
+- **`fix_year.py`** — bulk-update `&copy; YYYY AVYclima` everywhere. Trivial, but worth automating to remove drift between New Year and the next manual edit.
+
+Propose to Jurgen if a request makes any of these timely.

@@ -1,0 +1,27 @@
+name: site-qa
+
+# Runs the site-wide QA checks on every push and PR.
+# Fails the build if any check fails (see scripts/site_qa.py for the full list).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # allow manual run from the Actions tab
+
+jobs:
+  qa:
+    name: Run site_qa.py
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run site QA checks
+        run: python3 scripts/site_qa.py

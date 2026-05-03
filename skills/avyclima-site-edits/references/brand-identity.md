@@ -228,19 +228,19 @@ When you finish a visual edit, eyeball these:
 
 ## Drift between in-progress repo and live brand
 
-These are the deliberate items where the in-progress rebuild **diverges from the live brand** as of 2026-05-02. Each one is something to either fix in the rebuild or get explicit approval to keep as a redesign decision:
+This table tracked deliberate divergences between the rebuild and the live brand at the time `brand-identity.md` was first written (2026-05-02). After Phases 1–4 of `IMPLEMENTATION_PLAN.md`, every drift item has been resolved. Kept here as a closed-issue log.
 
-| # | Live | In-progress repo | Recommendation |
+| # | Drift | Status | Resolution |
 |---|---|---|---|
-| 1 | Typeface: **Montserrat** (400/600/700) | Inter (400–800) | Swap rebuild to Montserrat: update Google Fonts `<link>` on all 34 HTML pages and `var(--font-body)` / `var(--font-heading)` in `css/style.css`. |
-| 2 | Single accent: `#54d2eb` (cyan) | Primary blue `#0057a8` + accent cyan `#00b4d8` + `--primary-dark` `#003d75` + `--primary-light` `#e8f1fa` | Either drop the blues from the rebuild and align to the single-accent live palette, or get explicit Jurgen approval to keep a richer redesign palette. |
-| 3 | Logo: PNG image (`AVYLOGOweb_Tekengebied 1 kopie 5.png`, ~193×74) | HTML wordmark `AVY`+`<span>clima</span>` with two-color split | Replace HTML wordmark with `<img>` referencing a local copy of the live PNG. The "AVY blue + clima cyan" split is not what live shows. |
-| 4 | `theme-color`: `#3a3a3a` | `#0066cc` (most pages); old guidance said "fix to `#0057a8`" | Standardise to `#3a3a3a` site-wide. Update `known-issues.md` issue #16 to point at `#3a3a3a`, not `#0057a8`. |
-| 5 | Hero: dimmed photo with `rgba(58,58,58,0.8)` overlay | Diagonal blue gradient with cyan + white radial glows | Replace blue-gradient hero with photo+gray-overlay pattern; supply hero photo via `images/`. |
-| 6 | Cookie banner uses "je" | Skill rule: never "je" | Fix the live copy too, not just the rebuild — the live site is leaking the wrong tone. |
-| 7 | Live site is 2 pages (`/`, `/privacy-policy`) | Rebuild has 34 pages (service hubs, 13 city pages, blog, portfolio) | Rebuild is a major scope expansion, not a swap. Ensure SEO/sitemap/llms.txt clearly distinguish "what's currently public" vs. "what we're about to launch". |
+| 1 | Inter typeface | ✅ resolved | Swapped to Montserrat (400/600/700) on all 36 HTML pages + `css/style.css`. Enforced by `scripts/site_qa.py` (font check via Google Fonts link). |
+| 2 | Deep blue palette (`#0057a8`/`#003d75`/`#00b4d8`/`#e8f1fa`) | ✅ resolved | `:root` tokens redefined: `--primary: #3a3a3a`, `--accent: #54d2eb`, `--primary-light: #f7f9fa`. The ~120 CSS rules that referenced the old tokens now pick up the new values automatically. Hard-coded blues removed. |
+| 3 | HTML wordmark `AVY`+`<span>clima</span>` | ✅ resolved | Replaced with `<img src="images/logo.png" ...>` site-wide. `images/logo.png` is the optimised 600×231 web version; `img/logo.png` is the 11708×4500 master. Three logo colors now documented in this file: black wordmark, orange triangle (`#e84521`), light cyan triangle (`#9cd7eb`). |
+| 4 | `theme-color` mismatch | ✅ resolved | All 36 pages now `<meta name="theme-color" content="#3a3a3a">`. QA gate enforces this. |
+| 5 | Diagonal blue-gradient hero | ✅ resolved | Replaced with photo + `rgba(58,58,58,0.8)` overlay pattern. Default photo: `images/hero.jpg` (Daikin rooftop unit). Per-page override: `body.hero-over-ons` swaps to `images/hero-over-ons.jpg`. |
+| 6 | Cookie banner "je" wording | ✅ resolved (rebuild side) | All rebuild pages use formal "u" in the cookie banner. The live GoDaddy site still has "je" — Jurgen's call whether to update live too. |
+| 7 | Scope mismatch (live 2 pages vs rebuild 34) | ✅ resolved by clear documentation | The rebuild is now 36 pages (added 3 Denderleeuw + already had Aalst-area + blog/portfolio). All in `sitemap.xml`, `llms.txt`, and `llms-full.txt`. The rebuild is the future-state site; the live GoDaddy is the legacy. |
 
-When propagating any of the above into `css/style.css`, `theme-color` meta tags, the Google Fonts links, or the JSON-LD `logo` field, smoke-check the homepage, a service hub, a city page, and a blog post first.
+The brand alignment work is **complete**. Open items for the rebuild are tracked in `known-issues.md`, not here.
 
 ## What to do if the live site changes again
 

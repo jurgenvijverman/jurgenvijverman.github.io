@@ -410,28 +410,22 @@ p {
 }
 
 /* --- Hero Section ---
-   Live brand uses a dimmed photo (rgba(58,58,58,0.8) overlay) over a hero JPEG.
-   Until a hero photo is dropped into images/, we render a flat dark-ink background
-   that matches the overlay tint. Swap to the photo+overlay pattern below once
-   images/hero.jpg exists.
+   Live brand pattern: a dark gray (#3a3a3a @ 80%) overlay over a hero JPEG.
+   Default hero photo: images/hero.jpg (Daikin rooftop unit).
+   Per-page override: add class="hero-over-ons" to <body> to swap in a different photo.
 */
 .hero {
   padding: 8rem 0 5rem;
-  background: var(--primary);
-  color: var(--white);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Photo+overlay alternative — uncomment and supply images/hero.jpg to enable.
-.hero {
+  background-color: var(--primary);
   background-image:
     linear-gradient(rgba(58, 58, 58, 0.8), rgba(58, 58, 58, 0.8)),
     url("../images/hero.jpg");
   background-size: cover;
   background-position: center;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
 }
-*/
 
 .hero .container {
   position: relative;
@@ -469,12 +463,27 @@ p {
   backdrop-filter: blur(5px);
 }
 
-/* Page Hero (for subpages) */
+/* Page Hero (for subpages) — same photo+overlay pattern, shorter, centered.
+   Per-page override: add a body class that points at a different photo (see below).
+*/
 .page-hero {
   padding: 8rem 0 3rem;
-  background: var(--primary);
+  background-color: var(--primary);
+  background-image:
+    linear-gradient(rgba(58, 58, 58, 0.8), rgba(58, 58, 58, 0.8)),
+    url("../images/hero.jpg");
+  background-size: cover;
+  background-position: center;
   color: var(--white);
   text-align: center;
+}
+
+/* Per-page hero override: about-us page uses the van+building photo instead. */
+body.hero-over-ons .hero,
+body.hero-over-ons .page-hero {
+  background-image:
+    linear-gradient(rgba(58, 58, 58, 0.8), rgba(58, 58, 58, 0.8)),
+    url("../images/hero-over-ons.jpg");
 }
 
 .page-hero h1 {
@@ -571,9 +580,98 @@ p {
   gap: 2rem;
 }
 
-.grid--2 { grid-template-columns: repeat(2, 1fr); }
-.grid--3 { grid-template-columns: repeat(3, 1fr); }
-.grid--4 { grid-template-columns: repeat(4, 1fr); }
+.grid--2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.grid--3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.grid--4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+/* --- Region cards (homepage primary-region quick links) --- */
+.region-cards-block .grid--3 { gap: 1.5rem; }
+.region-card {
+  display: block;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+.region-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+  color: inherit;
+}
+.region-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--gray-800);
+}
+.region-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--gray-600);
+  margin: 0 0 1rem;
+}
+.region-card__cta {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+.region-card:hover .region-card__cta { color: var(--accent-dark); }
+
+/* --- Trust block (homepage "Waarom AVYclima" cards) --- */
+.trust-block .section-title { margin-bottom: 0.5rem; }
+.trust-block .section-subtitle {
+  text-align: center;
+  color: var(--gray-600);
+  margin-bottom: 3rem;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.trust-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: left;
+  transition: var(--transition);
+}
+.trust-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+}
+.trust-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(84, 210, 235, 0.12);
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+.trust-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+  color: var(--gray-800);
+}
+.trust-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--gray-600);
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .grid--4 { grid-template-columns: 1fr; }
+}
 
 .grid--center {
   align-items: center;

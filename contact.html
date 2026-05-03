@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Vraag een vrijblijvende offerte: we plannen een plaatsbezoek en bezorgen een voorstel op maat. Bel of mail AVYclima.">
-  <meta name="keywords" content="offerte airco, offerte warmtepomp, contact AVYclima, offerte Aalst, HVAC offerte">
-  <meta name="theme-color" content="#3a3a3a">
+  <meta name="description" content="Vraag een vrijblijvende offerte: we plannen een plaatsbezoek en bezorgen een voorstel op maat. Bel of mail AVYclima.">  <meta name="theme-color" content="#3a3a3a">
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
+    <!-- Plausible analytics (cookieless, GDPR-compliant) -->
+    <script defer data-domain="avyclima.be"
+            src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+    <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -122,7 +125,7 @@
         <a href="index.html">Home</a> <span>/</span> <span>Contact</span>
       </div>
       <h1>Neem contact op of vraag een offerte aan</h1>
-      <p>Duidelijke informatie en vrijblijvende advies van onze experts</p>
+      <p>Duidelijke informatie en vrijblijvend advies van onze experts</p>
     </div>
   </section>
 
@@ -182,10 +185,73 @@
               </select>
             </div>
 
-            <!-- Adres -->
+            <!-- Type woning + Type project -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="type-woning">Type woning</label>
+                <select id="type-woning" name="type_woning">
+                  <option value="">-- Kies een type --</option>
+                  <option value="Rijwoning">Rijwoning</option>
+                  <option value="Halfopen bebouwing">Halfopen bebouwing</option>
+                  <option value="Open bebouwing / vrijstaand">Open bebouwing / vrijstaand</option>
+                  <option value="Appartement">Appartement</option>
+                  <option value="Kantoor / KMO">Kantoor / KMO</option>
+                  <option value="Winkel / handelszaak">Winkel / handelszaak</option>
+                  <option value="Andere">Andere</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="type-project">Type project</label>
+                <select id="type-project" name="type_project">
+                  <option value="">-- Kies een type --</option>
+                  <option value="Nieuwe installatie">Nieuwe installatie</option>
+                  <option value="Vervanging bestaand systeem">Vervanging bestaand systeem</option>
+                  <option value="Renovatie (gas/stookolie naar warmtepomp)">Renovatie (gas/stookolie naar warmtepomp)</option>
+                  <option value="Onderhoud">Onderhoud</option>
+                  <option value="Herstelling / storing">Herstelling / storing</option>
+                  <option value="Advies / informatie">Advies / informatie</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Gemeente / postcode + Gewenste timing -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="gemeente">Gemeente of postcode</label>
+                <input type="text" id="gemeente" name="gemeente"
+                       list="gemeente-suggestions"
+                       placeholder="Bijv. Aalst, Denderleeuw, Ninove, 9470…">
+                <datalist id="gemeente-suggestions">
+                  <option value="Aalst (9300)"></option>
+                  <option value="Denderleeuw (9470)"></option>
+                  <option value="Iddergem (9472)"></option>
+                  <option value="Welle (9473)"></option>
+                  <option value="Ninove (9400)"></option>
+                  <option value="Haaltert (9450)"></option>
+                  <option value="Erpe-Mere (9420)"></option>
+                  <option value="Lede (9340)"></option>
+                  <option value="Dendermonde (9200)"></option>
+                  <option value="Liedekerke (1770)"></option>
+                  <option value="Affligem (1790)"></option>
+                </datalist>
+              </div>
+              <div class="form-group">
+                <label for="timing">Gewenste timing</label>
+                <select id="timing" name="timing">
+                  <option value="">-- Kies een termijn --</option>
+                  <option value="Zo snel mogelijk">Zo snel mogelijk</option>
+                  <option value="Binnen 1 maand">Binnen 1 maand</option>
+                  <option value="Binnen 3 maanden">Binnen 3 maanden</option>
+                  <option value="Later dit jaar">Later dit jaar</option>
+                  <option value="Alleen ter info">Alleen ter info</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Adres (volledig, optioneel — voor plaatsbezoek) -->
             <div class="form-group">
-              <label for="adres">Adres (voor plaatsbezoek)</label>
-              <input type="text" id="adres" name="adres" placeholder="Straat, huisnummer, postcode en stad">
+              <label for="adres">Volledig adres (optioneel — voor plaatsbezoek)</label>
+              <input type="text" id="adres" name="adres" placeholder="Straat, huisnummer">
             </div>
 
             <!-- Bericht -->
@@ -258,7 +324,7 @@
 
           <!-- Service Area -->
           <div class="service-area-box">
-            <h3>Onze werkgebied</h3>
+            <h3>Ons werkgebied</h3>
             <p>We werken in de regio Aalst, Denderleeuw, Ninove en omgeving. Dit omvat:</p>
             <ul class="service-area-list">
               <li>Aalst</li>
@@ -314,7 +380,7 @@
 
         <div class="process-step">
           <h3>Gedetailleerde offerte</h3>
-          <p>U ontvangt een vrijblijvende offerte met alle kosten, installatieduur, garantie en mogelijke subsidies uitgebreeid uitgelegd.</p>
+          <p>U ontvangt een vrijblijvende offerte met alle kosten, installatieduur, garantie en mogelijke subsidies uitgebreid uitgelegd.</p>
         </div>
 
         <div class="process-step">
@@ -391,7 +457,7 @@
       <div class="footer-grid">
         <div class="footer-about">
           <a href="index.html" class="logo"><img src="images/logo.png" alt="AVYclima" width="193" height="74" loading="eager" decoding="async"></a>
-          <p>Daikin specialist voor airconditioning en warmtepompen in Aalst en omgeving.</p>
+          <p>Daikin specialist voor airconditioning en warmtepompen in de regio Aalst, Denderleeuw en Ninove. Advies, installatie, onderhoud en herstellingen.</p>
         </div>
         <div class="footer-links">
           <h4>Diensten</h4>
