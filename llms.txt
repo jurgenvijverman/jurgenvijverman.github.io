@@ -1,6 +1,6 @@
 # AVYclima
 
-> Erkend Daikin specialist voor airconditioning en warmtepompen in de kernregio Aalst, Denderleeuw en Ninove (Oost-Vlaanderen, België). Installatie, onderhoud en herstellingen voor particulieren en KMO's. Opgericht in 2013, gevestigd in Denderleeuw.
+> Erkend Daikin specialist voor airconditioning en warmtepompen in de kernregio Aalst, Denderleeuw en Ninove (Oost-Vlaanderen, België). Installatie, onderhoud en herstellingen voor particulieren en KMO's. Opgericht in 2024, gevestigd in Denderleeuw.
 
 ## Diensten
 
@@ -8,12 +8,12 @@
 - [Warmtepompen](https://avyclima.be/warmtepomp.html): Installatie van Daikin lucht/lucht en lucht/water warmtepompen voor duurzame verwarming, koeling en sanitair warm water.
 - [Onderhoud & Herstellingen](https://avyclima.be/onderhoud.html): Periodiek onderhoud, reiniging, storingsdiagnose en herstelling van alle HVAC-installaties. Onderhoudscontracten beschikbaar.
 
-## Realisaties
+## Onze aanpak
 
-- [Portfolio](https://avyclima.be/portfolio.html): Overzicht van gerealiseerde projecten.
-- [Airco installatie Aalst](https://avyclima.be/portfolio/airco-installatie-aalst.html): Daikin Perfera split-airco in rijwoning.
-- [Warmtepomp renovatie Denderleeuw](https://avyclima.be/portfolio/warmtepomp-renovatie-denderleeuw.html): Daikin Altherma 3 H HT in jaren-70 woning.
-- [Multisplit kantoor Ninove](https://avyclima.be/portfolio/multisplit-kantoor-ninove.html): Daikin Multi NX 5MXM90N in kantoorgebouw.
+- [Aanpak overzicht](https://avyclima.be/portfolio.html): Hoe AVYclima typische airco- en warmtepompinstallaties benadert (werkbeelden, geen klantopdrachten).
+- [Airco aanpak — rijwoning Aalst](https://avyclima.be/portfolio/airco-installatie-aalst.html): Werkbeeld voor een Daikin Perfera split-airco in een rijwoning.
+- [Warmtepomp aanpak — renovatie Denderleeuw](https://avyclima.be/portfolio/warmtepomp-renovatie-denderleeuw.html): Werkbeeld voor een Daikin Altherma 3 H HT bij renovatie van een woning uit de jaren 1970.
+- [Multisplit aanpak — kantoor Ninove](https://avyclima.be/portfolio/multisplit-kantoor-ninove.html): Werkbeeld voor een Daikin Multi NX 5MXM90N met zoneregeling in een kantoorgebouw.
 
 ## Informatie
 
@@ -63,10 +63,15 @@
 - [Onderhoud: waarom en wanneer voor uw airco?](https://avyclima.be/blog/onderhoud-airco-wanneer.html)
 - [Split vs. multisplit airco: wat is het verschil?](https://avyclima.be/blog/split-vs-multisplit.html)
 - [Premies voor warmtepompen in Vlaanderen: overzicht 2026](https://avyclima.be/blog/premies-warmtepompen-vlaanderen.html)
+- [Hoeveel kost een warmtepomp installatie? Prijsgids 2026](https://avyclima.be/blog/prijs-warmtepomp-installatie.html)
+- [Airco in de slaapkamer: geluid, plaatsing en verbruik](https://avyclima.be/blog/airco-slaapkamer.html)
+- [Buitenunit plaatsen zonder burenhinder](https://avyclima.be/blog/buitenunit-burenhinder.html)
+- [Daikin Altherma voor renovatie: wanneer is het zinvol?](https://avyclima.be/blog/daikin-altherma-renovatie.html)
+- [Checklist vóór het plaatsbezoek](https://avyclima.be/blog/checklist-plaatsbezoek.html)
 
 ## Contact
 
 - Telefoon: +32 472 65 76 47
 - E-mail: info@avyclima.be
-- Locatie: Denderleeuw, 9470, België
+- Locatie: Denderleeuw, 9472, België
 - Openingsuren: Ma-Vr 8:00-18:00, Za 9:00-13:00

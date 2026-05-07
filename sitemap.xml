@@ -2,115 +2,145 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://avyclima.be/</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://avyclima.be/airco.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://avyclima.be/onderhoud.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://avyclima.be/over-ons.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/faq.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://avyclima.be/contact.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/privacy.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/airco-als-verwarming.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/prijs-airco-installatie.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/warmtepomp-renovatie.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/onderhoud-airco-wanneer.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/split-vs-multisplit.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/blog/premies-warmtepompen-vlaanderen.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://avyclima.be/blog/prijs-warmtepomp-installatie.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://avyclima.be/blog/airco-slaapkamer.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://avyclima.be/blog/buitenunit-burenhinder.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://avyclima.be/blog/daikin-altherma-renovatie.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://avyclima.be/blog/checklist-plaatsbezoek.html</loc>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/portfolio.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/portfolio/airco-installatie-aalst.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/portfolio/warmtepomp-renovatie-denderleeuw.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://avyclima.be/portfolio/multisplit-kantoor-ninove.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -118,7 +148,7 @@
   <!-- Werkgebied Hub -->
   <url>
     <loc>https://avyclima.be/werkgebied.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -126,19 +156,19 @@
   <!-- City Pages: Aalst -->
   <url>
     <loc>https://avyclima.be/airco-aalst.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-aalst.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/onderhoud-aalst.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -146,13 +176,13 @@
   <!-- City Pages: Ninove -->
   <url>
     <loc>https://avyclima.be/airco-ninove.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-ninove.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -160,13 +190,13 @@
   <!-- City Pages: Dendermonde -->
   <url>
     <loc>https://avyclima.be/airco-dendermonde.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-dendermonde.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -174,13 +204,13 @@
   <!-- City Pages: Erpe-Mere -->
   <url>
     <loc>https://avyclima.be/airco-erpe-mere.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-erpe-mere.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -188,13 +218,13 @@
   <!-- City Pages: Haaltert -->
   <url>
     <loc>https://avyclima.be/airco-haaltert.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-haaltert.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -202,31 +232,31 @@
   <!-- City Pages: Lede -->
   <url>
     <loc>https://avyclima.be/airco-lede.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-lede.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://avyclima.be/airco-denderleeuw.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://avyclima.be/warmtepomp-denderleeuw.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://avyclima.be/onderhoud-denderleeuw.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

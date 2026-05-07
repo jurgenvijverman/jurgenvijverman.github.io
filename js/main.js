@@ -85,25 +85,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const contactForm = document.querySelector('#contact-form');
   if (contactForm) {
 
-    // Check if returning from successful submission (Formsubmit.co redirect)
+    // Legacy fallback: cached/bookmarked links may still hit contact.html?verzonden=1.
+    // The active success path is /bedankt.html, which fires the Lead event itself.
+    // Here we only render the success banner for graceful degradation — no event
+    // firing, to avoid double-counting if a user hits both URLs in sequence.
     if (window.location.search.indexOf('verzonden=1') !== -1) {
       var successMsg = document.createElement('div');
       successMsg.className = 'form-success-banner';
       successMsg.innerHTML = '<p><strong>Bedankt voor uw aanvraag!</strong> We nemen zo snel mogelijk contact met u op.</p>';
       contactForm.parentElement.insertBefore(successMsg, contactForm);
       contactForm.style.display = 'none';
-
-      // Fire Plausible custom event on confirmed successful submission
-      if (typeof plausible === 'function') {
-        plausible('Lead', { props: { source: 'contact_form' } });
-      }
-      // Legacy GA4 path — kept harmless even if gtag isn't loaded
-      if (typeof gtag === 'function') {
-        gtag('event', 'generate_lead', {
-          event_category: 'contact',
-          event_label: 'contact_form_submit'
-        });
-      }
 
       // Clean URL without reloading
       if (window.history && window.history.replaceState) {
@@ -215,8 +206,9 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // --- Form submit tracking ---
-  // Note: the 'Lead' event fires on confirmed submission only (via ?verzonden=1
-  // redirect from Formsubmit.co), not on raw form submit — prevents false positives
-  // from validation failures or abandoned submissions.
+  // Note: the 'Lead' event fires once, on bedankt.html (the Formsubmit.co _next
+  // target) — not here on raw form submit. That prevents false positives from
+  // validation failures, network errors, or abandoned submissions, and keeps
+  // conversion attribution to a single, dedicated thank-you URL.
 
 });
