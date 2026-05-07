@@ -6,7 +6,9 @@ This is the user-side setup for Phase 5.4 (Plausible analytics) and Phase 5.5 (G
 
 ## 1 — Plausible Analytics (already wired in code)
 
-The `<script>` tag for `plausible.io/js/script.outbound-links.tagged-events.js` is already present in `<head>` on all 36 HTML pages. Custom events for `Lead`, `Phone Click`, and `Email Click` are wired in `js/main.js`.
+The site-specific Plausible tracker (`plausible.io/js/pa-pe_8hlxmrWygJZfpTQPiq.js`) is wired into `<head>` on every HTML page. The `Lead` event fires once on `bedankt.html` after a successful form submission; `Phone Click` and `Email Click` fire from `js/main.js` on every `tel:` / `mailto:` link click.
+
+Note on the new tracker URL: it's specific to avyclima.be (the `pa-pe_xxx` slug encodes the domain), so there is no `data-domain` attribute. Outbound-link tracking and tagged-events are no longer baked into the script URL — they're toggled inside the Plausible dashboard under **Site settings → Tracker** if you want them.
 
 What's left is the account side:
 
