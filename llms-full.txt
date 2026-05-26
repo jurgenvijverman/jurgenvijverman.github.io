@@ -73,7 +73,13 @@ Daikin warmtepompen voor duurzame verwarming, koeling en eventueel sanitair warm
 - COP (Coefficient of Performance) van 3-5: voor elke kW elektriciteit krijgt u 3-5 kW warmte
 - Terugverdientijd: gemiddeld 5-8 jaar (afhankelijk van subsidies en energieprijzen)
 
-### 3. Onderhoud & Herstellingen (https://avyclima.be/onderhoud.html)
+### 3. Glossarium warmtepomp (https://avyclima.be/glossarium-warmtepomp.html)
+
+Gestructureerd referentie-woordenboek met 20+ termen rond warmtepompen, alfabetisch geordend met A-Z snelnavigatie. Per term: definitie, "waarom dit ertoe doet", praktijkvoorbeeld, optionele bronvermelding.
+
+**Behandelde termen:** Afgiftetemperatuur, Bivalent punt, Brandstofverbruik, BTW op warmtepompen, Capaciteitstarief, COP, Discontovoet, Geothermische warmtepomp, Graaddagen (HDD), Hybride warmtepomp, Incrementele methode, Injectievergoeding, Lucht-lucht warmtepomp, Lucht-water warmtepomp, Mijn VerbouwPremie, NPV (netto contante waarde), Nuttige warmte, Rendement (η), Renovatieregime, SEER, Slimme sturing (HEMS), Sociaal tarief energie, SPF/SCOP, Terugverdientijd, Vermeden kost, V-test (VREG).
+
+### 4. Onderhoud & Herstellingen (https://avyclima.be/onderhoud.html)
 
 Professioneel onderhoud verlengt de levensduur en behoudt het rendement van uw HVAC-installatie.
 

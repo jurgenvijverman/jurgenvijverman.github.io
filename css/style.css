@@ -355,6 +355,21 @@ p {
   transition: var(--transition);
 }
 
+/* Calculator nav-link met cyan accent — staat tussen Warmtepomp en Onderhoud */
+.nav a.nav-link--accent {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.nav a.nav-link--accent::before {
+  content: "📊 ";
+  font-size: 0.85em;
+}
+
+.nav a.nav-link--accent:hover {
+  color: var(--accent);
+}
+
 .nav a:hover,
 .nav a.active {
   color: var(--primary);
@@ -1664,5 +1679,1069 @@ body.hero-over-ons .page-hero {
   .cookie-inner {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+/* ============================================================================
+   CALCULATOR — Kostenvergelijking warmtepomp
+   Voegt styling toe voor kostenvergelijking-warmtepomp.html
+   Conventie: alle calculator-classes beginnen met `.calc-`
+   ============================================================================ */
+
+.calc-section { padding: 3rem 0 5rem; }
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .calc-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Form (linker kolom op desktop) --- */
+.calc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 1rem;
+}
+
+@media (max-width: 960px) {
+  .calc-form { position: static; }
+}
+
+.calc-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.calc-fieldset legend {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-600);
+  font-weight: 600;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--gray-200);
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.calc-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.calc-field > label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--gray-800);
+}
+
+.calc-field input[type="number"],
+.calc-field select {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--white);
+  color: var(--gray-800);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.calc-field input[type="number"]:focus,
+.calc-field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(84, 210, 235, 0.25);
+}
+
+.calc-help {
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.calc-unit { color: var(--gray-500); font-weight: 400; font-size: 0.85rem; }
+
+/* Radio-toggle voor "vervangt volledig?" */
+.calc-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.calc-toggle input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.calc-toggle label {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  transition: all 0.15s;
+}
+
+.calc-toggle input[type="radio"]:checked + label {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.calc-toggle input[type="radio"]:focus-visible + label {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Scenario slider */
+.calc-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.calc-scenario-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 0.15rem;
+}
+
+.calc-disclaimer {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  line-height: 1.45;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--gray-200);
+  margin: 0;
+}
+
+/* --- Results (rechter kolom op desktop) --- */
+.calc-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* PROMINENT premie-footnote bovenaan */
+.calc-premie-footnote {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: var(--white);
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.calc-premie-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.calc-premie-footnote p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.calc-premie-footnote p + p { margin-top: 0.4rem; }
+
+.calc-premie-footnote a {
+  color: var(--white);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.calc-premie-footnote a:hover { text-decoration: none; }
+
+/* KPI cards */
+.calc-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .calc-kpis { grid-template-columns: 1fr; }
+}
+
+.calc-kpi {
+  background: var(--white);
+  padding: 1rem 1.25rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+  position: relative;
+}
+
+.calc-kpi-tag {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calc-kpi-title {
+  font-size: 0.88rem;
+  color: var(--gray-600);
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+
+.calc-kpi-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.15;
+}
+
+.calc-kpi-band {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin-top: 0.3rem;
+}
+
+.calc-kpi-help {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+  line-height: 1.35;
+}
+
+/* --- Hero KPI's (kostenvergelijking-pivot, 4 cards in een rij) -------- */
+.calc-kpis--hero {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 980px) {
+  .calc-kpis--hero { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .calc-kpis--hero { grid-template-columns: 1fr; }
+}
+
+.calc-kpi--hero {
+  text-align: left;
+  padding: 1rem;
+}
+
+.calc-kpi-icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+  line-height: 1;
+}
+
+.calc-kpi--hero .calc-kpi-value {
+  font-size: 1.5rem;
+}
+
+.calc-kpi--positive {
+  border-color: rgba(40, 167, 69, 0.30);
+  background: rgba(40, 167, 69, 0.04);
+}
+
+.calc-kpi--positive .calc-kpi-value {
+  color: #28a745;
+}
+
+.calc-kpi--negative {
+  border-color: rgba(220, 53, 69, 0.30);
+  background: rgba(220, 53, 69, 0.04);
+}
+
+.calc-kpi--negative .calc-kpi-value {
+  color: #dc3545;
+}
+
+/* --- Aandeel-slider --------------------------------------------------- */
+.calc-field--share .calc-range-value {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.calc-field--share .calc-range-value strong {
+  color: var(--accent, #54d2eb);
+  font-size: 1.1rem;
+}
+
+/* --- Collapsible Investeringsperspectief ------------------------------ */
+.calc-collapsible {
+  margin-top: 2rem;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.calc-collapsible[open] {
+  border-color: var(--gray-300);
+}
+
+.calc-collapsible-summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  background: var(--gray-50, #f8f9fa);
+  user-select: none;
+  transition: background-color 120ms ease;
+}
+
+.calc-collapsible-summary::-webkit-details-marker { display: none; }
+.calc-collapsible-summary::marker { content: ''; }
+
+.calc-collapsible-summary:hover {
+  background: var(--gray-100, #eef0f2);
+}
+
+.calc-collapsible-icon {
+  font-size: 1.25rem;
+}
+
+.calc-collapsible-title {
+  flex: 1;
+}
+
+.calc-collapsible-chevron {
+  font-size: 1.25rem;
+  color: var(--gray-500);
+  transition: transform 200ms ease;
+}
+
+.calc-collapsible[open] .calc-collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+.calc-collapsible-body {
+  padding: 1.25rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.calc-collapsible-intro {
+  margin: 0 0 1rem;
+  color: var(--gray-700);
+  font-size: 0.95rem;
+}
+
+.calc-collapsible-note {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+/* Headings binnen resultaten */
+.calc-h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0 0 0.75rem;
+}
+
+.calc-h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0 0 0.5rem;
+}
+
+/* Grafiek */
+.calc-chart-wrap {
+  background: var(--white);
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+}
+
+.calc-chart {
+  width: 100%;
+  overflow: hidden;
+}
+
+.calc-svg { width: 100%; height: auto; display: block; }
+
+.calc-chart-sub {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin: 0.5rem 0 0;
+  text-align: center;
+}
+
+/* Kosten-tabel */
+.calc-cost-wrap {
+  background: var(--white);
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+  overflow-x: auto;
+}
+
+.calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.calc-table th,
+.calc-table td {
+  padding: 0.6rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.calc-table thead th {
+  font-size: 0.78rem;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calc-table tbody th {
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.calc-pos { color: var(--success); font-weight: 600; }
+.calc-neg { color: var(--danger);  font-weight: 600; }
+
+/* Info cards (CO₂, koeling, toekomst) */
+.calc-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 720px) {
+  .calc-cards { grid-template-columns: 1fr; }
+}
+
+.calc-info-card {
+  background: var(--gray-50);
+  padding: 1rem 1.1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+}
+
+.calc-info-icon { font-size: 1.5rem; line-height: 1; margin-bottom: 0.5rem; }
+
+.calc-info-card h4 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 700; }
+
+.calc-info-card p { margin: 0; font-size: 0.88rem; line-height: 1.5; color: var(--gray-700); }
+
+/* Waarschuwingen */
+.calc-warnings { /* container, gevuld door view */ }
+
+.calc-warnings-inner {
+  background: #fff8e6;
+  border: 1px solid var(--warning);
+  border-radius: var(--border-radius);
+  padding: 1rem 1.25rem;
+}
+
+.calc-warning-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.calc-warning {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--gray-700);
+}
+
+.calc-warning-id {
+  flex-shrink: 0;
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  background: var(--white);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--gray-300);
+  align-self: flex-start;
+}
+
+.calc-warning--warning .calc-warning-id { color: var(--warning); border-color: var(--warning); }
+.calc-warning--info    .calc-warning-id { color: var(--gray-600); }
+
+.calc-warning-msg { flex: 1; }
+
+/* CTA-blok in resultaten */
+.calc-cta {
+  background: var(--gray-50);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+  text-align: center;
+}
+
+.calc-cta p { margin: 0 0 1rem; }
+
+.calc-cta .btn-group {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* --- Page-hero variant voor calculator-pagina --- */
+.page-hero h1 { line-height: 1.2; }
+
+/* === Uitgebreide modus — toggle + extra velden ============================= */
+
+.calc-modus {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.calc-modus-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  width: fit-content;
+}
+
+.calc-modus-btn:hover {
+  border-color: var(--accent);
+  background: rgba(84, 210, 235, 0.06);
+}
+
+.calc-modus-btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.calc-modus-btn[aria-expanded="true"] {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.calc-modus-icon { font-size: 1rem; line-height: 1; }
+
+.calc-modus-help {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  line-height: 1.4;
+}
+
+/* Extra-blokken binnen een fieldset: visueel ingesprongen */
+.calc-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--gray-200);
+}
+
+.calc-extra[hidden] { display: none; }
+
+/* Fieldsets die alleen in uitgebreide modus bestaan */
+.calc-fieldset--extras-only[hidden] { display: none; }
+
+.calc-fieldset--extras-only .calc-extra {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.calc-optional {
+  color: var(--gray-500);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+/* Checkboxes met label rechts ernaast */
+.calc-field--checkbox {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 0.6rem !important;
+  flex-wrap: wrap;
+}
+
+.calc-field--checkbox input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.2rem;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
+.calc-field--checkbox label {
+  font-weight: 500 !important;
+  cursor: pointer;
+  flex: 1;
+  min-width: 200px;
+}
+
+.calc-field--checkbox small {
+  width: 100%;
+  margin-left: 1.7rem;
+}
+
+/* Range-slider met waarde-display (PV-share) */
+.calc-range-value {
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  font-weight: 600;
+}
+
+.calc-range-value span { color: var(--primary); }
+
+/* Validatie-state */
+.calc-field-invalid {
+  border-color: var(--danger) !important;
+  background: #fff5f5 !important;
+}
+
+.calc-field-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.20) !important;
+}
+
+.calc-error {
+  font-size: 0.82rem;
+  color: var(--danger);
+  margin-top: 0.15rem;
+  line-height: 1.35;
+}
+
+.calc-error[hidden] { display: none; }
+
+/* === Info-buttons + uitleg-panels (Fase 4 — leerplatform) ================ */
+
+.calc-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.4rem;
+  padding: 0;
+  border: 1px solid var(--gray-400);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--gray-600);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s;
+  vertical-align: middle;
+}
+
+.calc-info-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  background: rgba(84, 210, 235, 0.10);
+}
+
+.calc-info-btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.calc-info-btn[aria-expanded="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+.calc-info-panel {
+  margin-top: 0.5rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(84, 210, 235, 0.08);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--gray-700);
+}
+
+.calc-info-panel[hidden] { display: none; }
+
+.calc-info-panel p { margin: 0 0 0.5rem; }
+.calc-info-panel p:last-child { margin-bottom: 0; }
+
+.calc-info-panel ul {
+  margin: 0.4rem 0 0.5rem;
+  padding-left: 1.2rem;
+}
+
+.calc-info-panel li { margin-bottom: 0.25rem; }
+
+.calc-info-panel a {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.calc-info-panel a:hover { text-decoration: none; }
+
+/* === Print-knop in resultaten-paneel ====================================== */
+
+.calc-results-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -0.5rem;
+}
+
+/* === Glossarium-pagina ==================================================== */
+
+.glossarium-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.glossarium-nav a {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: center;
+  padding: 0.4rem 0.7rem;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  color: var(--gray-800);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.glossarium-nav a:hover,
+.glossarium-nav a:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+  outline: none;
+}
+
+.glossarium h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  color: var(--accent-dark);
+  border-bottom: 2px solid var(--gray-200);
+  padding-bottom: 0.3rem;
+}
+
+.glossarium h2:first-of-type { margin-top: 0; }
+
+.gloss-term {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--gray-200);
+}
+
+.gloss-term:last-child { border-bottom: 0; }
+
+.gloss-term h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0 0 0.5rem;
+  scroll-margin-top: 100px;
+}
+
+.gloss-term p { margin: 0 0 0.6rem; line-height: 1.65; }
+.gloss-term p:last-child { margin-bottom: 0; }
+
+.gloss-term ul {
+  margin: 0.4rem 0 0.8rem;
+  padding-left: 1.4rem;
+}
+
+.gloss-term ul li { margin-bottom: 0.3rem; line-height: 1.55; }
+
+.glossarium-footer-note {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-style: italic;
+  color: var(--gray-600);
+}
+
+/* === "Hoe lees ik mijn jaarafrekening" guide-blok ========================= */
+
+.factuur-guide {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.factuur-svg {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius);
+}
+
+.factuur-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  counter-reset: list-counter;
+}
+
+.factuur-list li {
+  position: relative;
+  padding-left: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.factuur-list li::marker {
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.factuur-help {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(84, 210, 235, 0.08);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+/* === Form fallback-banner (FormSubmit/Cloudflare outage) ================== */
+
+.form-fallback-banner {
+  background: #fff8e6;
+  border: 1px solid var(--warning);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--border-radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--gray-800);
+}
+
+.form-fallback-banner h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: #8a5e00;
+}
+
+.form-fallback-banner p { margin: 0 0 0.6rem; line-height: 1.55; }
+.form-fallback-banner p:last-child { margin-bottom: 0; }
+
+.form-fallback-banner ul {
+  margin: 0.4rem 0;
+  padding-left: 1.4rem;
+}
+
+.form-fallback-banner ul li {
+  margin-bottom: 0.4rem;
+  font-size: 1.02rem;
+}
+
+.form-fallback-banner a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.form-fallback-banner a:hover { text-decoration: none; }
+
+.form-fallback-banner small { color: var(--gray-600); }
+
+/* === Calculator-samenvatting op contact-pagina (5.2) ===================== */
+
+.calc-prefill-summary {
+  background: rgba(84, 210, 235, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--border-radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.calc-prefill-summary h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--accent-dark);
+}
+
+.calc-prefill-summary p { margin: 0 0 0.4rem; font-size: 0.92rem; }
+
+.calc-prefill-summary dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.3rem 1rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.calc-prefill-summary dt { color: var(--gray-600); font-weight: 600; }
+.calc-prefill-summary dd { margin: 0; color: var(--gray-800); }
+
+/* === Calculator cross-link card (warmtepomp.html + city pages + blog) ==== */
+
+.calc-cta-card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #f7f9fa 0%, rgba(84, 210, 235, 0.12) 100%);
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 600px) {
+  .calc-cta-card { flex-direction: column; gap: 0.75rem; }
+}
+
+.calc-cta-card-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.calc-cta-card-body { flex: 1; }
+
+.calc-cta-card-body h2,
+.calc-cta-card-body h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--gray-800);
+}
+
+.calc-cta-card-body p {
+  margin: 0 0 0.75rem;
+  color: var(--gray-700);
+}
+
+.calc-cta-card-body p:last-child { margin-bottom: 0; }
+
+.calc-cta-card-body .btn + .btn { margin-left: 0.5rem; }
+
+/* === Print-stylesheet ===================================================== */
+
+@media print {
+  .header, .footer, .cookie-banner, .calc-modus, .nav-toggle,
+  .calc-cta .btn-group, .calc-results-actions, .calc-info-btn,
+  .skip-to-content { display: none !important; }
+  .calc-info-panel { display: none !important; }
+
+  body { background: #fff !important; }
+
+  .calc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  .calc-form {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+    position: static !important;
+  }
+
+  .calc-premie-footnote {
+    background: #f0f9ff !important;
+    color: #003a4d !important;
+    border: 2px solid var(--accent) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-inside: avoid;
+  }
+  .calc-premie-footnote a { color: #003a4d !important; }
+
+  .calc-kpi { page-break-inside: avoid; }
+  .calc-chart-wrap, .calc-cost-wrap, .calc-cards, .calc-warnings {
+    page-break-inside: avoid;
+  }
+
+  /* --- Print rules voor kostenvergelijking-pivot --- */
+  /* Forceer hero-KPIs op één regel als de breedte het toelaat */
+  .calc-kpis--hero {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.5rem;
+  }
+  .calc-kpi--hero {
+    padding: 0.6rem;
+    page-break-inside: avoid;
+  }
+  .calc-kpi--hero .calc-kpi-value { font-size: 1.2rem !important; }
+  .calc-kpi-icon { font-size: 1.1rem !important; }
+
+  /* Investeringsperspectief: tijdens print ALTIJD opengeklapt, ook al was
+     het gesloten in de browser-view. Anders gaat de halve resultaat verloren. */
+  .calc-collapsible[open] .calc-collapsible-body,
+  .calc-collapsible .calc-collapsible-body {
+    display: block !important;
+  }
+  .calc-collapsible {
+    page-break-inside: auto;
+    border: 1px solid #ccc;
+  }
+  .calc-collapsible-summary {
+    background: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-after: avoid;
+  }
+  .calc-collapsible-chevron { display: none !important; }
+
+  /* Aandeel-slider: toon waarde, verberg de slider-control zelf */
+  .calc-field--share input[type="range"] { display: none !important; }
+  .calc-field--share .calc-range-value {
+    font-size: 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #eee;
   }
 }

@@ -128,8 +128,14 @@ NAMED_TESTIMONIAL_RE = re.compile(
 # Informal pronouns are checked outside <script> blocks only
 INFORMAL_PRONOUN_RE = re.compile(r"\b(je|jij|jouw|jullie)\b")
 
-# Files to ignore for sitemap-presence (e.g. error pages, drafts)
-SITEMAP_EXCLUDE = set()  # empty for now
+# Files to ignore for sitemap-presence (e.g. transactional/thank-you pages
+# that are intentionally noindex). These must have <meta name="robots"
+# content="noindex"> in their <head> — and we also skip them in the
+# canonical check since they shouldn't be indexed at all.
+SITEMAP_EXCLUDE = {
+    "bedankt.html",  # form-submission thank-you page, noindex by design
+    "kostenvergelijking-warmtepomp.html",  # beta calculator, URL-gated + noindex
+}
 
 # ---------------------------------------------------------------------------
 # Content-debt waivers — known issues we are NOT failing CI on.
@@ -415,9 +421,12 @@ def check_theme_color(files: list[Path], r: Result) -> None:
 def check_canonicals(files: list[Path], r: Result) -> None:
     bad: list[str] = []
     for f in files:
+        rel = relative_html_path(f)
+        # Skip noindex/transactional pages — they don't need canonical for SEO.
+        if rel in SITEMAP_EXCLUDE:
+            continue
         s = f.read_text(encoding="utf-8")
         m = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', s)
-        rel = relative_html_path(f)
         expected = f"{SITE_URL}/{rel}" if rel != "index.html" else f"{SITE_URL}/"
         if not m:
             bad.append(f"{rel}: missing canonical")
@@ -428,7 +437,7 @@ def check_canonicals(files: list[Path], r: Result) -> None:
         for b in bad:
             r.fail(f"  {b}")
     else:
-        r.ok(f"All {len(files)} canonicals match their filename.")
+        r.ok(f"All {len(files) - len(SITEMAP_EXCLUDE)} canonicals match their filename.")
 
 
 def check_broken_links(files: list[Path], r: Result) -> None:

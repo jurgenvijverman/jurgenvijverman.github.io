@@ -8,6 +8,10 @@
 - [Warmtepompen](https://avyclima.be/warmtepomp.html): Installatie van Daikin lucht/lucht en lucht/water warmtepompen voor duurzame verwarming, koeling en sanitair warm water.
 - [Onderhoud & Herstellingen](https://avyclima.be/onderhoud.html): Periodiek onderhoud, reiniging, storingsdiagnose en herstelling van alle HVAC-installaties. Onderhoudscontracten beschikbaar.
 
+## Tools en informatie warmtepomp
+
+- [Glossarium warmtepomp](https://avyclima.be/glossarium-warmtepomp.html): Uitleg van 20+ technische en financiële termen rond warmtepompen in Vlaanderen — SPF, COP, capaciteitstarief, graaddagen, BTW, NPV, incrementele methode, en meer.
+
 ## Onze aanpak
 
 - [Aanpak overzicht](https://avyclima.be/portfolio.html): Hoe AVYclima typische airco- en warmtepompinstallaties benadert (werkbeelden, geen klantopdrachten).

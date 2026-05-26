@@ -1,0 +1,160 @@
+{
+  "$schema": "./vlaamse-tarieven.schema.json",
+  "_meta": {
+    "lastUpdated": "2026-05-25",
+    "reviewedBy": "JV + claude",
+    "version": "2026.1-v1",
+    "scope": "v1 — premies vallen buiten de berekening; calculator rekent op bruto investering met footnote-deeplink naar officiële premie-simulator",
+    "verification_log": "docs/tarieven-2026-screenshots/checked-by.md",
+    "next_review_due": "2027-01-01"
+  },
+
+  "premium_link": {
+    "_comment": "v1 sluit premies uit de berekening. Calculator-UI toont prominente footnote met deeplink hierheen. Premie-integratie verschuift naar v2/Fase 8 — zie TERUGVERDIENTIJD_CALCULATOR_PLAN.md Deel 5.",
+    "url": "https://www.vlaanderen.be/premies-voor-renovatie/mijn-verbouwpremie",
+    "label_nl": "Bekijk uw premie op de officiële simulator",
+    "range_nl": "€300 tot €9.600 (Mijn VerbouwPremie, afhankelijk van categorie en type)",
+    "verified_on": "2026-05-25"
+  },
+
+  "vat": {
+    "_comment": "Calculator default = 21%. 6% selecteerbaar bij volledige vervanging van bestaande verwarming. Afgeleide logica: replaces_existing_heating=true → 6%; anders → 21%. Geldt voor alle warmtepomp-types incl. lucht-lucht (KB 18-12-2025, geldig tot 31-12-2030).",
+    "default_rate": 0.21,
+    "reduced_rate_when_replacing_heating": 0.06,
+    "renovation_min_age_years": 10,
+    "heatpump_6pct_regulation_since": "2026-01-01",
+    "heatpump_6pct_regulation_until": "2030-12-31",
+    "fossil_21pct_renovation_since": "2025-07-29",
+    "fossil_21pct_demolition_rebuild_since": "2025-07-01",
+    "fossil_transition_until": "2026-06-30",
+    "hybrid_forfait_specific_pct": 0.35,
+    "hybrid_forfait_specific_vat": 0.21,
+    "hybrid_forfait_non_specific_pct": 0.65,
+    "hybrid_forfait_non_specific_vat": 0.06,
+    "legal_basis": "Circulaire 2025/C/47; KB nr. 20 rubrieken XXXI en XXXVII",
+    "source_url": "https://fin.belgium.be/nl/particulieren/woning/bouwen-verbouwen/verbouwen/gewijzigde-btw-tarieven-verwarmingsinstallaties-fossiele-brandstoffen",
+    "verified_on": "2026-05-25"
+  },
+
+  "capacity_tariff": {
+    "_comment": "Fluvius Midden-Vlaanderen = default voor AVYclima-werkgebied (Aalst, Denderleeuw, Ninove). Vlaams gemiddelde wordt in UI naast het veld getoond ter referentie. Gemiddelde maandpiek 4,24 kW bruikbaar als default voor 'huidige piek' input.",
+    "fluvius_midden_vlaanderen_eur_per_kw_year_excl_vat": 50.1239818,
+    "average_flanders_eur_per_kw_year_excl_vat": 53.39,
+    "average_flanders_eur_per_kw_month_excl_vat": 4.45,
+    "average_household_monthly_peak_kw": 4.24,
+    "minimum_kw": 2.5,
+    "vat_rate_residential": 0.06,
+    "fluvius_midden_vlaanderen_source": "Goedgekeurde tariefkaart 2026 — Fluvius Midden-Vlaanderen ELEKTRICITEIT, rij 1.2 Afnameklanten op laagspanningsnet met piekmeting, kolom Gemiddelde maandpiek (€/kW/jaar)",
+    "vreg_source_url": "https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/nettarieven/capaciteitstarief",
+    "vreg_last_updated": "2026-04-23",
+    "verified_on": "2026-05-25"
+  },
+
+  "energy": {
+    "_comment": "Defaults gebaseerd op VREG dashboard-cijfers voor typische gezinsprofielen: 3.500 kWh elektriciteit (nov 2025 gemiddelde) en 17.000 kWh gas (april 2026 gemiddelde). Veld blijft overschrijfbaar in UI. Scenarioband ×1,15 / ×0,85 dekt de spreiding gewogen hoogste tot gewogen laagste contract.",
+    "electricity_typical_eur_per_kwh": 0.33,
+    "electricity_breakdown_3500kwh_2025_11": {
+      "sociaal_tarief_eur_per_kwh": 0.2143,
+      "gewogen_laagste_eur_per_kwh": 0.2880,
+      "gemiddelde_eur_per_kwh": 0.3317,
+      "standaardtarief_eur_per_kwh": 0.3452,
+      "gewogen_hoogste_eur_per_kwh": 0.3926
+    },
+    "electricity_source_url": "https://www.vlaamsenutsregulator.be/cijfers/dashboard-afnameprijzen-elektriciteit-vooruitblik",
+    "electricity_verified_on": "2026-05-25",
+
+    "gas_typical_eur_per_kwh": 0.10,
+    "gas_breakdown_17000kwh_2026_04": {
+      "sociaal_tarief_eur_per_kwh": 0.0504,
+      "standaardtarief_eur_per_kwh": 0.0781,
+      "gewogen_laagste_eur_per_kwh": 0.0864,
+      "gemiddelde_eur_per_kwh": 0.1043,
+      "gewogen_hoogste_eur_per_kwh": 0.1218
+    },
+    "gas_source_url": "https://www.vlaamsenutsregulator.be/cijfers/dashboard-afnameprijzen-aardgas-vooruitblik",
+    "gas_verified_on": "2026-05-25",
+
+    "oil_typical_eur_per_liter": 1.10,
+    "pellet_typical_eur_per_kg": 0.42,
+
+    "electricity_escalation_pct_per_year": 0.01,
+    "gas_escalation_pct_per_year": 0.03,
+    "escalation_comment": "Gas escalatie hoger dan elektriciteit wegens stijgende federale accijnzen op gas vanaf 2026 en EU ETS-2 vanaf 2027. Elektriciteit-nettarieven dalen licht in 2026 + accijnzen op elektriciteit dalen."
+  },
+
+  "conversions": {
+    "_comment": "Sectorstandaard waarden. Exacte coëfficiënt voor H-gas varieert per maand en per GOS (gasontvangststation) — staat op de jaarafrekening van de klant. Tooltip in UI verwijst hiernaar.",
+    "gas_kwh_per_m3_H_gas": 11.5,
+    "gas_kwh_per_m3_L_gas": 10.25,
+    "oil_kwh_per_liter": 10.0,
+    "pellet_kwh_per_kg": 4.8,
+    "fluvius_methodology_url": "https://www.fluvius.be/nl/factuur-en-tarieven/berekeningsparameters",
+    "fluvius_partner_detail_url": "https://partner.fluvius.be/nl/thema/energieleveranciers#sectorinformatie",
+    "verified_on": "2026-05-25"
+  },
+
+  "weather": {
+    "_comment": "Default = recent 2-jaars gemiddelde (klimaat-gecorrigeerd). 30-jaar norm Synergrid (periode 1996-2025) is verouderd t.o.v. praktijk — KMI bevestigt: 2025 was 4e warmste jaar in Ukkel sinds 1833. Verschil tussen norm en recent ≈ 245 graaddagen (10% minder verwarmingsbehoefte).",
+    "hdd_reference_30y_norm": 2187,
+    "hdd_reference_2024": 1942,
+    "hdd_reference_2025": 1973,
+    "hdd_reference_recent_2y_avg": 1958,
+    "default": 1960,
+    "equivalent_hdd_formula": "GDeq = 0.6*GD(D) + 0.3*GD(D-1) + 0.1*GD(D-2)",
+    "synergrid_source_url": "https://www.synergrid.be/nl/documentencentrum/statistieken-gegevens/graaddagen",
+    "kmi_climate_overview_url": "https://www.meteo.be/resources/climatology/pdf/klimatologisch_jaaroverzicht_2025.pdf",
+    "verified_on": "2026-05-25"
+  },
+
+  "emission_factors_kg_co2_per_kwh": {
+    "_comment": "Officiële Belgische/Vlaamse emissiefactoren per kWh finale energie. Gebruikt voor de jaarlijkse CO₂-besparingsberekening (kostenvergelijking-calculator). Verbrandings-conventie (EPB-stijl) — primaire bron VEKA-VMM nota januari 2022 voor brandstoffen; AIB-residuele mix via VREG voor elektriciteit (jaarlijks bijgewerkt).",
+
+    "natural_gas_h": 0.202,
+    "natural_gas_h_source": "https://www.cnc-nkc.be/sites/default/files/meeting/files/nota_emissiefactor_aardgas_incl_aanvullingen_evolutie_co2_en_impact_-_goedgekeurd.pdf",
+    "natural_gas_h_verified_date": "2026-05-25",
+    "natural_gas_h_note": "CNC-NKC technische nota aardgas (08-11-2021), gevalideerd door Fluxys + FOD Economie + de 3 gewesten. Range 2017-2019: 56,40-56,53 t/TJ ≈ 0,202 kg/kWh.",
+
+    "electricity_be_residual_mix": 0.132,
+    "electricity_be_residual_mix_source": "https://www.vreg.be/nl/energieverbruik",
+    "electricity_be_residual_mix_secondary_source": "https://business.engie.be/nl/faq/contract/co2-uitstoot/",
+    "electricity_be_residual_mix_verified_date": "2026-05-25",
+    "electricity_be_residual_mix_year": 2024,
+    "electricity_be_residual_mix_note": "AIB residuele mix België 2024 (131,73 g/kWh). Wordt JAARLIJKS geactualiseerd door AIB rond eind mei/begin juni. Vernieuw rond 2026-06-01 zodra AIB 2025-cijfer wordt gepubliceerd.",
+
+    "fuel_oil": 0.267,
+    "fuel_oil_source": "https://assets.vlaanderen.be/image/upload/v1667817909/2022-01-11_VEKA-VMM_nota_COW_emissiefactoren_en_soortelijk_gewicht_phgn1g.pdf",
+    "fuel_oil_verified_date": "2026-05-25",
+    "fuel_oil_note": "VEKA-VMM nota standaard CO₂-emissiefactoren (januari 2022). Komt overeen met IPCC default ~74,1 kg CO₂/GJ voor gasoil.",
+
+    "propane": 0.230,
+    "propane_source": "https://assets.vlaanderen.be/image/upload/v1667817909/2022-01-11_VEKA-VMM_nota_COW_emissiefactoren_en_soortelijk_gewicht_phgn1g.pdf",
+    "propane_verified_date": "2026-05-25",
+    "propane_note": "VEKA-VMM nota; IPCC default 63,1 kg CO₂/GJ voor LPG.",
+
+    "pellets_lifecycle": 0.040,
+    "pellets_lifecycle_source": "https://emis.vito.be/sites/emis.vito.be/files/pages/migrated/energietechnologie_anre_studie_pellets_volledig_rapport.pdf",
+    "pellets_lifecycle_verified_date": "2026-05-25",
+    "pellets_lifecycle_note": "Levenscyclus-factor (productie + transport). EPB-conventie hanteert 0 (biogeen-neutraal). We tonen LCA-cijfer in UI voor eerlijke vergelijking met warmtepomp; tooltip legt verschil uit. Bron VITO pellets-studie Vlaanderen."
+  },
+
+  "_comment_premium_v2": "Het premium-blok (cat1..cat4 bedragen per warmtepomp-type, plafonds, verhoging-logica) komt terug in v2 (Fase 8). Volledig 3-stappen-validatieprotocol gedocumenteerd in docs/tarieven-2026-screenshots/README.md sectie 'B1-v2'. Tot dan blijft de calculator op bruto investering werken met footnote-deeplink naar officiële simulator.",
+
+  "_sources": {
+    "B1_B2_premies": "https://www.vlaanderen.be/premies-voor-renovatie/mijn-verbouwpremie",
+    "B3_capaciteitstarief": "https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/nettarieven/capaciteitstarief",
+    "B4_vtest": "https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/energiecontracten-en-leveranciers/doe-de-v-testr",
+    "B5_btw_renovatie": "https://www.vlaanderen.be/bouwen-wonen-en-energie/bouwen-en-verbouwen/btw-tarief-van-6-bij-renovatie-en-sloop-en-heropbouw-van-woningen",
+    "B6_btw_fossiel": "https://fin.belgium.be/nl/particulieren/woning/bouwen-verbouwen/verbouwen/gewijzigde-btw-tarieven-verwarmingsinstallaties-fossiele-brandstoffen",
+    "B7_fluvius_m3_kwh": "https://www.fluvius.be/nl/factuur-en-tarieven/berekeningsparameters",
+    "B8_graaddagen": "https://www.synergrid.be/nl/documentencentrum/statistieken-gegevens/graaddagen",
+    "B9_dashboard_elektriciteit": "https://www.vlaamsenutsregulator.be/cijfers/dashboard-afnameprijzen-elektriciteit-vooruitblik",
+    "B10_dashboard_gas": "https://www.vlaamsenutsregulator.be/cijfers/dashboard-afnameprijzen-aardgas-vooruitblik",
+    "B11_fluvius_mv_tariefkaart": "https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/nettarieven/hoeveel-bedragen-de-distributienettarieven",
+    "B12_vlaio": "https://www.vlaio.be/nl/subsidies-financiering/subsidiedatabank/maatregelen/warmtepompen-steun",
+    "B13_kmi_klimaat": "https://www.meteo.be/resources/climatology/pdf/klimatologisch_jaaroverzicht_2025.pdf",
+    "B14_veka_vmm_co2_factoren": "https://assets.vlaanderen.be/image/upload/v1667817909/2022-01-11_VEKA-VMM_nota_COW_emissiefactoren_en_soortelijk_gewicht_phgn1g.pdf",
+    "B15_cnc_nkc_aardgas_co2": "https://www.cnc-nkc.be/sites/default/files/meeting/files/nota_emissiefactor_aardgas_incl_aanvullingen_evolutie_co2_en_impact_-_goedgekeurd.pdf",
+    "B16_aib_elektriciteit_co2": "https://www.vreg.be/nl/energieverbruik",
+    "B17_vito_pellets_co2": "https://emis.vito.be/sites/emis.vito.be/files/pages/migrated/energietechnologie_anre_studie_pellets_volledig_rapport.pdf"
+  }
+}

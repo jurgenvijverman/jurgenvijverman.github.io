@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://avyclima.be/schemas/vlaamse-tarieven-2026.json",
+  "title": "Vlaamse Tarieven 2026 — Tariefblad voor terugverdientijd-warmtepomp calculator",
+  "description": "Schema voor data/vlaamse-tarieven-2026.json. Valideert de structuur van het tariefblad dat door de calculator-kern wordt geladen. Update wanneer nieuwe velden worden toegevoegd.",
+  "type": "object",
+  "required": ["_meta", "premium_link", "vat", "capacity_tariff", "energy", "conversions", "weather", "emission_factors_kg_co2_per_kwh"],
+  "additionalProperties": true,
+
+  "properties": {
+    "$schema": { "type": "string" },
+
+    "_meta": {
+      "type": "object",
+      "required": ["lastUpdated", "reviewedBy", "version", "scope"],
+      "properties": {
+        "lastUpdated":       { "type": "string", "format": "date" },
+        "reviewedBy":        { "type": "string", "minLength": 1 },
+        "version":           { "type": "string", "minLength": 1 },
+        "scope":             { "type": "string" },
+        "verification_log":  { "type": "string" },
+        "next_review_due":   { "type": "string", "format": "date" }
+      },
+      "additionalProperties": true
+    },
+
+    "premium_link": {
+      "type": "object",
+      "required": ["url", "label_nl"],
+      "properties": {
+        "url":          { "type": "string", "format": "uri" },
+        "label_nl":     { "type": "string", "minLength": 1 },
+        "range_nl":     { "type": "string" },
+        "verified_on":  { "type": "string", "format": "date" }
+      },
+      "additionalProperties": true
+    },
+
+    "vat": {
+      "type": "object",
+      "required": ["default_rate", "reduced_rate_when_replacing_heating", "renovation_min_age_years"],
+      "properties": {
+        "default_rate":                          { "type": "number", "enum": [0.06, 0.21] },
+        "reduced_rate_when_replacing_heating":   { "type": "number", "const": 0.06 },
+        "renovation_min_age_years":              { "type": "integer", "minimum": 1 },
+        "heatpump_6pct_regulation_since":        { "type": "string", "format": "date" },
+        "heatpump_6pct_regulation_until":        { "type": "string", "format": "date" },
+        "fossil_21pct_renovation_since":         { "type": "string", "format": "date" },
+        "fossil_21pct_demolition_rebuild_since": { "type": "string", "format": "date" },
+        "fossil_transition_until":               { "type": "string", "format": "date" },
+        "hybrid_forfait_specific_pct":           { "type": "number", "minimum": 0, "maximum": 1 },
+        "hybrid_forfait_specific_vat":           { "type": "number", "enum": [0.06, 0.21] },
+        "hybrid_forfait_non_specific_pct":       { "type": "number", "minimum": 0, "maximum": 1 },
+        "hybrid_forfait_non_specific_vat":       { "type": "number", "enum": [0.06, 0.21] },
+        "legal_basis":                           { "type": "string" },
+        "source_url":                            { "type": "string", "format": "uri" },
+        "verified_on":                           { "type": "string", "format": "date" }
+      },
+      "additionalProperties": true
+    },
+
+    "capacity_tariff": {
+      "type": "object",
+      "required": ["fluvius_midden_vlaanderen_eur_per_kw_year_excl_vat", "average_flanders_eur_per_kw_year_excl_vat", "minimum_kw"],
+      "properties": {
+        "fluvius_midden_vlaanderen_eur_per_kw_year_excl_vat": { "type": "number", "minimum": 0, "maximum": 200 },
+        "average_flanders_eur_per_kw_year_excl_vat":          { "type": "number", "minimum": 0, "maximum": 200 },
+        "average_flanders_eur_per_kw_month_excl_vat":         { "type": "number", "minimum": 0, "maximum": 30 },
+        "average_household_monthly_peak_kw":                  { "type": "number", "minimum": 0, "maximum": 50 },
+        "minimum_kw":                                         { "type": "number", "minimum": 0 },
+        "vat_rate_residential":                               { "type": "number", "enum": [0.06, 0.21] },
+        "fluvius_midden_vlaanderen_source":                   { "type": "string" },
+        "vreg_source_url":                                    { "type": "string", "format": "uri" },
+        "vreg_last_updated":                                  { "type": "string", "format": "date" },
+        "verified_on":                                        { "type": "string", "format": "date" }
+      },
+      "additionalProperties": true
+    },
+
+    "energy": {
+      "type": "object",
+      "required": ["electricity_typical_eur_per_kwh", "gas_typical_eur_per_kwh"],
+      "properties": {
+        "electricity_typical_eur_per_kwh":   { "type": "number", "minimum": 0.05, "maximum": 1.0 },
+        "gas_typical_eur_per_kwh":           { "type": "number", "minimum": 0.02, "maximum": 0.50 },
+        "oil_typical_eur_per_liter":         { "type": "number", "minimum": 0.5, "maximum": 3.0 },
+        "pellet_typical_eur_per_kg":         { "type": "number", "minimum": 0.2, "maximum": 1.0 },
+        "electricity_escalation_pct_per_year": { "type": "number", "minimum": -0.1, "maximum": 0.2 },
+        "gas_escalation_pct_per_year":         { "type": "number", "minimum": -0.1, "maximum": 0.2 },
+        "electricity_breakdown_3500kwh_2025_11": { "type": "object" },
+        "gas_breakdown_17000kwh_2026_04":        { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+
+    "conversions": {
+      "type": "object",
+      "required": ["gas_kwh_per_m3_H_gas", "oil_kwh_per_liter", "pellet_kwh_per_kg"],
+      "properties": {
+        "gas_kwh_per_m3_H_gas":  { "type": "number", "minimum": 8.0, "maximum": 14.0 },
+        "gas_kwh_per_m3_L_gas":  { "type": "number", "minimum": 8.0, "maximum": 14.0 },
+        "oil_kwh_per_liter":     { "type": "number", "minimum": 8.0, "maximum": 12.0 },
+        "pellet_kwh_per_kg":     { "type": "number", "minimum": 3.0, "maximum": 6.0 }
+      },
+      "additionalProperties": true
+    },
+
+    "weather": {
+      "type": "object",
+      "required": ["default", "hdd_reference_30y_norm"],
+      "properties": {
+        "default":                    { "type": "integer", "minimum": 1000, "maximum": 3000 },
+        "hdd_reference_30y_norm":     { "type": "integer", "minimum": 1000, "maximum": 3000 },
+        "hdd_reference_recent_2y_avg":{ "type": "integer", "minimum": 1000, "maximum": 3000 },
+        "hdd_reference_2024":         { "type": "integer", "minimum": 1000, "maximum": 3000 },
+        "hdd_reference_2025":         { "type": "integer", "minimum": 1000, "maximum": 3000 },
+        "equivalent_hdd_formula":     { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "emission_factors_kg_co2_per_kwh": {
+      "type": "object",
+      "description": "Belgische/Vlaamse CO₂-emissiefactoren per kWh finale energie. Bronnen: VEKA-VMM nota januari 2022, CNC-NKC aardgas-nota, AIB residuele mix via VREG, VITO pellets-studie.",
+      "required": [
+        "natural_gas_h",
+        "natural_gas_h_source",
+        "natural_gas_h_verified_date",
+        "electricity_be_residual_mix",
+        "electricity_be_residual_mix_source",
+        "electricity_be_residual_mix_verified_date",
+        "fuel_oil",
+        "fuel_oil_source",
+        "fuel_oil_verified_date",
+        "propane",
+        "propane_source",
+        "propane_verified_date",
+        "pellets_lifecycle",
+        "pellets_lifecycle_source",
+        "pellets_lifecycle_verified_date"
+      ],
+      "properties": {
+        "natural_gas_h":                              { "type": "number", "minimum": 0.15, "maximum": 0.30 },
+        "natural_gas_h_source":                       { "type": "string", "format": "uri" },
+        "natural_gas_h_verified_date":                { "type": "string", "format": "date" },
+        "natural_gas_h_note":                         { "type": "string" },
+        "electricity_be_residual_mix":                { "type": "number", "minimum": 0.0,  "maximum": 0.50 },
+        "electricity_be_residual_mix_source":         { "type": "string", "format": "uri" },
+        "electricity_be_residual_mix_secondary_source":{ "type": "string", "format": "uri" },
+        "electricity_be_residual_mix_verified_date":  { "type": "string", "format": "date" },
+        "electricity_be_residual_mix_year":           { "type": "integer", "minimum": 2020, "maximum": 2030 },
+        "electricity_be_residual_mix_note":           { "type": "string" },
+        "fuel_oil":                                   { "type": "number", "minimum": 0.20, "maximum": 0.35 },
+        "fuel_oil_source":                            { "type": "string", "format": "uri" },
+        "fuel_oil_verified_date":                     { "type": "string", "format": "date" },
+        "fuel_oil_note":                              { "type": "string" },
+        "propane":                                    { "type": "number", "minimum": 0.18, "maximum": 0.30 },
+        "propane_source":                             { "type": "string", "format": "uri" },
+        "propane_verified_date":                      { "type": "string", "format": "date" },
+        "propane_note":                               { "type": "string" },
+        "pellets_lifecycle":                          { "type": "number", "minimum": 0.0,  "maximum": 0.15 },
+        "pellets_lifecycle_source":                   { "type": "string", "format": "uri" },
+        "pellets_lifecycle_verified_date":            { "type": "string", "format": "date" },
+        "pellets_lifecycle_note":                     { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+
+    "_sources":            { "type": "object" },
+    "_comment_premium_v2": { "type": "string" }
+  }
+}

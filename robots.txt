@@ -4,6 +4,9 @@
 User-agent: *
 Allow: /
 
+# Beta: kostenvergelijking-calculator is tijdens beta-testperiode niet publiek beschikbaar
+Disallow: /kostenvergelijking-warmtepomp.html
+
 # Sitemap
 Sitemap: https://avyclima.be/sitemap.xml
 

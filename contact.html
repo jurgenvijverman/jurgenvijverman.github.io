@@ -141,6 +141,13 @@
           <h2>Offerte aanvragen</h2>
           <p>Vul het formulier in. We nemen contact op om uw vraag te verduidelijken en plannen indien nodig een plaatsbezoek. Daarna ontvangt u een duidelijke offerte op maat.</p>
 
+          <!-- Calculator-samenvatting (alleen zichtbaar bij ?bron=calculator) -->
+          <div class="calc-prefill-summary" id="calc-prefill-summary" hidden>
+            <h3>Aanvraag komt vanuit terugverdientijd-calculator</h3>
+            <p>De volgende gegevens uit de calculator worden meegestuurd. Pas ze aan indien nodig in het formulier hieronder.</p>
+            <dl id="calc-prefill-list"></dl>
+          </div>
+
           <form id="contact-form" method="POST" action="https://formsubmit.co/info@avyclima.be">
             <!-- Formsubmit.co configuration -->
             <input type="hidden" name="_subject" value="Nieuwe aanvraag via avyclima.be">
@@ -149,6 +156,15 @@
             <input type="hidden" name="_next" value="https://avyclima.be/bedankt.html">
             <!-- Honeypot spam protection -->
             <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+            <!-- Calculator-context (alleen ingevuld bij ?bron=calculator) -->
+            <input type="hidden" name="_calc_bron" id="hidden-calc-bron">
+            <input type="hidden" name="_calc_woning" id="hidden-calc-woning">
+            <input type="hidden" name="_calc_bouwjaar" id="hidden-calc-bouwjaar">
+            <input type="hidden" name="_calc_brandstof" id="hidden-calc-brandstof">
+            <input type="hidden" name="_calc_verbruik" id="hidden-calc-verbruik">
+            <input type="hidden" name="_calc_wp_type" id="hidden-calc-wp-type">
+            <input type="hidden" name="_calc_vervangt" id="hidden-calc-vervangt">
 
             <!-- Naam & Voornaam -->
             <div class="form-row">

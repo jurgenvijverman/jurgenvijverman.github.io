@@ -85,6 +85,80 @@ document.addEventListener('DOMContentLoaded', function () {
   const contactForm = document.querySelector('#contact-form');
   if (contactForm) {
 
+    // ── Calculator-prefill ──────────────────────────────────────────────
+    // Als de bezoeker via de terugverdientijd-calculator hier komt, tonen
+    // we hun keuzes bovenaan en zetten ze als verborgen velden zodat de
+    // installateur de context in de aanvraag-mail ziet.
+    (function fillCalculatorContext() {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('bron') !== 'calculator') return;
+
+      var WOONTYPE = { open:'Open bebouwing', halfopen:'Halfopen bebouwing', rij:'Rijwoning', appartement:'Appartement' };
+      var BRANDSTOF = { gas:'Aardgas', mazout:'Stookolie (mazout)', elektrisch:'Elektrisch', pellets:'Pellets / hout' };
+      var WPTYPE = {
+        lucht_lucht:'Lucht / lucht (multisplit)',
+        lucht_water:'Lucht / water (Altherma)',
+        hybride_lucht_water:'Hybride lucht / water',
+        geothermisch:'Geothermisch'
+      };
+      var VERVANGT = { yes:'Ja — volledige vervanging', no:'Nee — bestaand blijft' };
+
+      var fields = [
+        { key:'woning',   label:'Type woning',           map: WOONTYPE,  hiddenId:'hidden-calc-woning' },
+        { key:'bouwjaar', label:'Bouwjaar',              map: null,      hiddenId:'hidden-calc-bouwjaar' },
+        { key:'brandstof',label:'Huidige brandstof',     map: BRANDSTOF, hiddenId:'hidden-calc-brandstof' },
+        { key:'verbruik', label:'Jaarverbruik (kWh)',    map: null,      hiddenId:'hidden-calc-verbruik' },
+        { key:'type',     label:'Warmtepomp-type',       map: WPTYPE,    hiddenId:'hidden-calc-wp-type' },
+        { key:'vervangt', label:'Vervangt huidig systeem', map: VERVANGT, hiddenId:'hidden-calc-vervangt' }
+      ];
+
+      var summary = document.getElementById('calc-prefill-summary');
+      var list = document.getElementById('calc-prefill-list');
+      if (!summary || !list) return;
+
+      var bronInput = document.getElementById('hidden-calc-bron');
+      if (bronInput) bronInput.value = 'calculator';
+
+      var anyShown = false;
+      fields.forEach(function (f) {
+        var raw = params.get(f.key);
+        if (!raw) return;
+        var display = f.map ? (f.map[raw] || raw) : raw;
+
+        var dt = document.createElement('dt');
+        dt.textContent = f.label;
+        var dd = document.createElement('dd');
+        dd.textContent = display;
+        list.appendChild(dt);
+        list.appendChild(dd);
+
+        var hidden = document.getElementById(f.hiddenId);
+        if (hidden) hidden.value = display;
+        anyShown = true;
+      });
+
+      if (anyShown) {
+        summary.hidden = false;
+        // Pre-set het onderwerp als type warmtepomp gekozen is
+        var typeRaw = params.get('type');
+        if (typeRaw) {
+          var onderwerpEl = contactForm.querySelector('[name="onderwerp"]');
+          if (onderwerpEl) {
+            for (var i = 0; i < onderwerpEl.options.length; i++) {
+              if (onderwerpEl.options[i].value === 'Offerte warmtepomp') {
+                onderwerpEl.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        }
+        // Plausible event
+        if (typeof window.plausible === 'function') {
+          window.plausible('Lead from Calculator');
+        }
+      }
+    })();
+
     // Legacy fallback: cached/bookmarked links may still hit contact.html?verzonden=1.
     // The active success path is /bedankt.html, which fires the Lead event itself.
     // Here we only render the success banner for graceful degradation — no event
@@ -136,8 +210,52 @@ document.addEventListener('DOMContentLoaded', function () {
       submitBtn.textContent = 'Bezig met verzenden...';
       submitBtn.disabled = true;
 
-      // Allow the native form POST to Formsubmit.co to proceed
+      // Allow the native form POST to Formsubmit.co to proceed.
+      //
+      // Watchdog-fallback: FormSubmit.co draait achter Cloudflare. Bij een outage
+      // hangt de POST en zien klanten een lege pagina of timeout. We zetten een
+      // 12-seconden timer; als de browser nog op contact.html staat, tonen we
+      // een fallback-banner met telefoonnummer + mailto. Bij succes navigeert
+      // de browser weg naar /bedankt.html en wordt deze timer gecanceld door
+      // pagina-unload.
+      setTimeout(function () {
+        if (document.visibilityState !== 'hidden') {
+          showFormFallbackBanner(contactForm);
+        }
+      }, 12000);
     });
+
+    function showFormFallbackBanner(form) {
+      // Restore submit-state zodat klant het opnieuw kan proberen
+      var submitBtn = form.querySelector('[type="submit"]');
+      if (submitBtn) {
+        submitBtn.textContent = 'Probeer opnieuw te verzenden';
+        submitBtn.disabled = false;
+      }
+
+      // Voorkom dubbele banners
+      if (document.querySelector('.form-fallback-banner')) return;
+
+      var banner = document.createElement('div');
+      banner.className = 'form-fallback-banner';
+      banner.setAttribute('role', 'alert');
+      banner.innerHTML = [
+        '<h3>Het verzenden duurt langer dan verwacht</h3>',
+        '<p>Ons formulier-systeem reageert traag of is mogelijk tijdelijk niet bereikbaar. ',
+        'Uw aanvraag is misschien nog wel goed binnengekomen — als u binnen 5 minuten geen bevestiging in uw mailbox ziet, gebruik dan een van deze directe kanalen:</p>',
+        '<ul>',
+        '<li>📞 <a href="tel:+32472657647">Bellen: +32 472 65 76 47</a></li>',
+        '<li>✉️ <a href="mailto:info@avyclima.be">Mailen: info@avyclima.be</a></li>',
+        '</ul>',
+        '<p><small>Onze excuses voor het ongemak. Form-storingen treden zelden op en duren typisch enkele minuten.</small></p>'
+      ].join('');
+      form.parentElement.insertBefore(banner, form);
+
+      // Plausible event voor monitoring
+      if (typeof window.plausible === 'function') {
+        window.plausible('Form Fallback Triggered');
+      }
+    }
   }
 
   // --- Smooth scroll for anchor links ---

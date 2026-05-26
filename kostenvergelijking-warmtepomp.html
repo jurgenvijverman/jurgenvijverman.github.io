@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3a3a3a">
+
+  <!-- Beta-toegang: deze pagina is verborgen voor publiek tijdens beta-testperiode.
+       Toegang via ?preview=<sleutel> in de URL. Eerste bezoek slaat een localStorage-flag op
+       zodat de gebruiker niet bij elke bezoekbeurt de sleutel hoeft te typen. -->
+  <meta name="robots" content="noindex,nofollow">
+  <script>
+  (function () {
+    var SECRET = 'avy2026';
+    var STORAGE_KEY = 'avy_calc_preview';
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var fromUrl = params.get('preview');
+      var stored = null;
+      try { stored = window.localStorage.getItem(STORAGE_KEY); } catch (e) { /* private mode */ }
+      var hasAccess = (fromUrl === SECRET) || (stored === SECRET);
+      if (!hasAccess) {
+        window.location.replace('/');
+        return;
+      }
+      if (fromUrl === SECRET) {
+        try { window.localStorage.setItem(STORAGE_KEY, SECRET); } catch (e) { /* private mode */ }
+      }
+    } catch (err) {
+      // Fail-closed: bij elke onverwachte fout terug naar home
+      window.location.replace('/');
+    }
+  })();
+  </script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-pe_8hlxmrWygJZfpTQPiq.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+
+  <meta name="description" content="Vergelijk uw huidige verwarmingskost met die van een warmtepomp. Eerlijk, transparant en gebaseerd op actuele Vlaamse tarieven (VREG, Fluvius) en officiële CO₂-factoren (VEKA, AIB). AVYclima — Daikin-specialist regio Aalst, Denderleeuw, Ninove.">
+  <meta property="og:title" content="Wat kost een warmtepomp u per jaar? — Kostenvergelijking | AVYclima">
+  <meta property="og:description" content="Vergelijk uw jaarlijkse verwarmingskost in 5 vragen. Vlaamse tarieven 2026 + officiële CO₂-cijfers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://avyclima.be/kostenvergelijking-warmtepomp.html">
+  <meta property="og:image" content="https://avyclima.be/og-image.jpg">
+  <meta property="og:locale" content="nl_BE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wat kost een warmtepomp u per jaar? — Kostenvergelijking | AVYclima">
+  <meta name="twitter:description" content="Vergelijk uw jaarlijkse verwarmingskost in 5 vragen. Vlaamse tarieven 2026 + officiële CO₂-cijfers.">
+
+  <link rel="canonical" href="https://avyclima.be/kostenvergelijking-warmtepomp.html">
+  <link rel="alternate" hreflang="nl-BE" href="https://avyclima.be/kostenvergelijking-warmtepomp.html">
+  <link rel="alternate" hreflang="x-default" href="https://avyclima.be/kostenvergelijking-warmtepomp.html">
+
+  <title>Wat kost een warmtepomp u per jaar? — Kostenvergelijking | AVYclima</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="preload" as="style" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Preload tariefblad zodat eerste berekening direct kan starten -->
+  <link rel="preload" as="fetch" href="data/vlaamse-tarieven-2026.json" crossorigin="anonymous">
+
+  <!-- JSON-LD: WebApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kostenvergelijking-calculator warmtepomp",
+    "description": "Vergelijk de jaarlijkse verwarmingskost van een warmtepomp met uw huidige installatie. Gebaseerd op actuele Vlaamse tarieven (VREG, Fluvius) en officiële CO₂-factoren (VEKA-VMM, AIB).",
+    "url": "https://avyclima.be/kostenvergelijking-warmtepomp.html",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Vereist JavaScript en een moderne browser (Chrome, Firefox, Safari, Edge — laatste twee versies).",
+    "inLanguage": "nl-BE",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "provider": {
+      "@type": "HVACBusiness",
+      "name": "AVYclima",
+      "url": "https://avyclima.be"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://avyclima.be/" },
+      { "@type": "ListItem", "position": 2, "name": "Warmtepompen", "item": "https://avyclima.be/warmtepomp.html" },
+      { "@type": "ListItem", "position": 3, "name": "Wat kost een warmtepomp", "item": "https://avyclima.be/kostenvergelijking-warmtepomp.html" }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Hoeveel bespaar ik per jaar met een warmtepomp?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Voor een typisch Vlaams gezin met gas-verwarming dat overstapt op een lucht-water-warmtepomp ligt de jaarlijkse besparing op de operationele kost (gas vs elektriciteit + capaciteitstarief) typisch tussen 300 en 900 euro per jaar — sterk afhankelijk van uw SPF, brandstofprijs en isolatie. Voor een lucht-lucht-installatie naast bestaande verwarming kan de besparing 200-600 euro per jaar zijn, afhankelijk van hoeveel verwarming u door de warmtepomp laat overnemen." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wat betekent 'aandeel van verwarming overgenomen door de warmtepomp'?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Niet elke warmtepomp neemt de volledige verwarming over. Een lucht-water-warmtepomp die uw gasketel vervangt = 100% overname. Een lucht-lucht-installatie (zoals een Daikin multisplit) wordt vaak in de woonkamer en slaapkamers gezet als bij-verwarming, terwijl de bestaande gasketel in een aparte ruimte zoals badkamer of keuken blijft draaien — typisch ~40% overname. Een hybride warmtepomp draait standaard op de warmtepomp en valt op koudste dagen terug op de ketel — typisch ~85%." }
+      },
+      {
+        "@type": "Question",
+        "name": "Hoe wordt de CO₂-besparing berekend?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We gebruiken de officiële Vlaamse/Belgische emissiefactoren per kWh finale energie: aardgas 0,202 kg CO₂/kWh (CNC-NKC), elektriciteit Belgische residuele mix 2024 0,132 kg/kWh (AIB via VREG), mazout 0,267 kg/kWh (VEKA-VMM), propaan 0,230 kg/kWh, pellets levenscyclus 0,040 kg/kWh (VITO). De besparing = huidige uitstoot − nieuwe uitstoot. Bij partial-share blijft de resterende brandstof meegerekend." }
+      },
+      {
+        "@type": "Question",
+        "name": "Op welke tarieven is de calculator gebaseerd?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Op de actuele Vlaamse marktcijfers van mei 2026: elektriciteitsprijs 0,33 €/kWh en gasprijs 0,10 €/kWh (Vlaams gemiddelde via VREG), capaciteitstarief Fluvius Midden-Vlaanderen 50,12 €/kW/jaar excl. btw, graaddagen 1.960 (recent klimaat-gecorrigeerd gemiddelde). Alle cijfers zijn herzienbaar in de uitgebreide modus." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-to-content">Naar hoofdinhoud</a>
+
+<header class="header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="AVYclima" width="193" height="74" loading="eager" decoding="async"></a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="airco.html">Airco</a>
+      <a href="warmtepomp.html">Warmtepomp</a>
+      <a href="onderhoud.html">Onderhoud</a>
+      <a href="over-ons.html">Over ons</a>
+      <a href="portfolio.html">Aanpak</a>
+      <a href="faq.html">FAQ</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="warmtepomp.html">Warmtepomp</a>
+        <span>/</span>
+        <span>Wat kost een warmtepomp u per jaar</span>
+      </nav>
+      <h1>Wat kost een warmtepomp u per jaar?</h1>
+      <p>Vergelijk uw huidige verwarmingskost met die van een warmtepomp. Vijf vragen, onmiddellijk resultaat — gebaseerd op actuele Vlaamse tarieven (VREG, Fluvius, mei 2026) en officiële CO₂-cijfers (VEKA-VMM, AIB).</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content-narrow">
+      <p>Deze tool toont u <strong>hoeveel u jaarlijks bespaart op uw verwarmingskost</strong> als u (een deel van) uw verwarming op een warmtepomp draait. Plus hoeveel CO₂ u minder uitstoot. Voor de meest precieze berekening op uw concrete woning — <a href="contact.html">vraag een vrijblijvend plaatsbezoek aan</a>. Voor wie ook de investeringsterugverdientijd wil zien: onderaan is er een aparte sectie <em>"Investeringsperspectief"</em>.</p>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section class="section section--gray calc-section" aria-labelledby="calc-title">
+    <div class="container">
+      <h2 id="calc-title" class="visually-hidden">Calculator</h2>
+
+      <div class="calc-grid">
+
+        <!-- Inputs (left column op desktop, bovenaan op mobiel) -->
+        <form class="calc-form" id="calc-form" aria-label="Invoer voor terugverdientijd-berekening" novalidate>
+
+          <!-- Modus-toggle bovenaan -->
+          <div class="calc-modus">
+            <button type="button" class="calc-modus-btn" id="modus-toggle" aria-expanded="false" aria-controls="calc-form">
+              <span class="calc-modus-icon" aria-hidden="true">⚙</span>
+              <span class="calc-modus-label">Toon uitgebreide opties</span>
+            </button>
+            <small class="calc-modus-help">Snelle modus = 5 vragen met realistische defaults. Uitgebreide modus = ~13 extra velden om defaults te overschrijven.</small>
+          </div>
+
+          <fieldset class="calc-fieldset">
+            <legend>Uw woning</legend>
+
+            <div class="calc-field">
+              <label for="building-type">Type woning</label>
+              <select id="building-type" name="building_type" required>
+                <option value="open">Open bebouwing (vrijstaand)</option>
+                <option value="halfopen" selected>Halfopen bebouwing</option>
+                <option value="rij">Rijwoning</option>
+                <option value="appartement">Appartement</option>
+              </select>
+            </div>
+
+            <div class="calc-field">
+              <label for="build-year">Bouwjaar
+                <button type="button" class="calc-info-btn" aria-label="Meer uitleg over bouwjaar"
+                        aria-expanded="false" aria-controls="info-build-year" data-info-toggle>i</button>
+              </label>
+              <input type="number" id="build-year" name="build_year" min="1800" max="2030" value="1990" required>
+              <small class="calc-help">Bepaalt of u onder het renovatie-regime valt (≥10 jaar) voor btw.</small>
+              <div class="calc-info-panel" id="info-build-year" hidden>
+                <p>Het bouwjaar bepaalt onder welk BTW-regime uw warmtepomp-installatie valt:</p>
+                <ul>
+                  <li><strong>Woning ≥10 jaar oud</strong> — renovatieregime, mogelijk 6% btw bij volledige vervanging van bestaande verwarming.</li>
+                  <li><strong>Woning &lt;10 jaar of nieuwbouw</strong> — sinds 1 januari 2026 ook 6% btw mogelijk via de nieuwe warmtepompregeling (KB 18 december 2025, geldig tot eind 2030).</li>
+                </ul>
+                <p><a href="glossarium-warmtepomp.html#btw-warmtepomp">Volledig in het glossarium →</a></p>
+              </div>
+              <div class="calc-error" id="err-build-year" hidden></div>
+            </div>
+
+            <div class="calc-extra" hidden>
+              <div class="calc-field">
+                <label for="heated-area">Verwarmde oppervlakte (m²) <span class="calc-optional">— optioneel</span></label>
+                <input type="number" id="heated-area" name="heated_area" min="20" max="1000" placeholder="leeg = afleiden uit woningtype">
+                <small class="calc-help">Voor warmtevraag-controle. Default per woningtype: open ~180, halfopen ~140, rij ~110, appartement ~85.</small>
+                <div class="calc-error" id="err-heated-area" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="hdd-actual">Graaddagen vorig jaar <span class="calc-optional">— optioneel</span></label>
+                <input type="number" id="hdd-actual" name="hdd_actual" min="800" max="3500" placeholder="leeg = geen correctie">
+                <small class="calc-help">Voor klimaatcorrectie van uw verbruik. Vlaams gemiddelde 2024 = 1.942; 2025 = 1.973 (Synergrid).</small>
+                <div class="calc-error" id="err-hdd-actual" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="insulation">Isolatieniveau <span class="calc-optional">— optioneel</span></label>
+                <select id="insulation" name="insulation">
+                  <option value="onbekend" selected>Onbekend</option>
+                  <option value="laag">Laag (oud dak, enkel glas)</option>
+                  <option value="gemiddeld">Gemiddeld</option>
+                  <option value="hoog">Hoog (gerenoveerd of recent)</option>
+                  <option value="passief">Passiefhuis</option>
+                </select>
+                <small class="calc-help">Indicatief — wordt momenteel niet in de berekening gebruikt maar wel doorgegeven aan het plaatsbezoek.</small>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend>Huidige verwarming</legend>
+
+            <div class="calc-field">
+              <label for="current-fuel">Brandstof huidige verwarming</label>
+              <select id="current-fuel" name="current_fuel" required>
+                <option value="gas" selected>Aardgas</option>
+                <option value="mazout">Stookolie (mazout)</option>
+                <option value="elektrisch">Elektrische verwarming</option>
+                <option value="pellets">Pellets / hout</option>
+              </select>
+            </div>
+
+            <div class="calc-field">
+              <label for="current-consumption">Jaarverbruik <span class="calc-unit" id="consumption-unit">(kWh)</span>
+                <button type="button" class="calc-info-btn" aria-label="Meer uitleg over jaarverbruik"
+                        aria-expanded="false" aria-controls="info-consumption" data-info-toggle>i</button>
+              </label>
+              <input type="number" id="current-consumption" name="current_consumption" min="0" value="17000" required>
+              <small class="calc-help">Staat op uw jaarafrekening. Voor m³ gas omgerekend naar kWh op uw factuur.</small>
+              <div class="calc-info-panel" id="info-consumption" hidden>
+                <p>Op uw jaarafrekening (Luminus, Engie, TotalEnergies, etc.) vindt u uw totale jaarverbruik:</p>
+                <ul>
+                  <li><strong>Gas</strong> — meestal vermeld in m³ én omgerekend naar kWh. Gebruik de kWh-waarde. Typisch gezin: 10.000–20.000 kWh/jaar.</li>
+                  <li><strong>Mazout / pellets</strong> — uw leverancier kan kWh-equivalent geven, of u rekent zelf om: 1 liter mazout ≈ 10 kWh; 1 kg pellets ≈ 4,8 kWh.</li>
+                  <li><strong>Elektrische verwarming</strong> — alleen het deel dat naar verwarming gaat, niet uw totale elektriciteits­verbruik.</li>
+                </ul>
+                <p><a href="glossarium-warmtepomp.html#brandstofverbruik">Volledig in het glossarium →</a></p>
+              </div>
+              <div class="calc-error" id="err-current-consumption" hidden></div>
+            </div>
+
+            <div class="calc-extra" hidden>
+              <div class="calc-field">
+                <label for="dhw-share">Aandeel sanitair warm water (%) <span class="calc-optional">— optioneel</span></label>
+                <input type="number" id="dhw-share" name="dhw_share" min="0" max="50" step="1" placeholder="leeg = standaard 15% voor gas">
+                <small class="calc-help">Welk percentage van uw gasverbruik gaat naar warm douche/badwater? Default per brandstof: gas 15%, mazout 10%, pellets 10%, elektrisch 0%.</small>
+                <div class="calc-error" id="err-dhw-share" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="eta-space">Rendement bestaande verwarming (%) <span class="calc-optional">— optioneel</span>
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over rendement"
+                          aria-expanded="false" aria-controls="info-eta" data-info-toggle>i</button>
+                </label>
+                <input type="number" id="eta-space" name="eta_space" min="50" max="100" step="1" placeholder="leeg = standaard 90% voor gas">
+                <small class="calc-help">Hoeveel van uw brandstof effectief warmte wordt. Moderne condensatieketel ~90%; oude ketel ~75-85%; elektrische verwarming 100%.</small>
+                <div class="calc-info-panel" id="info-eta" hidden>
+                  <p>Het <strong>rendement (η, eta)</strong> van uw bestaande verwarming is het deel van de brandstof-energie dat als nuttige warmte in uw woning terechtkomt.</p>
+                  <p>Typische waarden:</p>
+                  <ul>
+                    <li>Moderne gascondensatieketel (na 2010): <strong>88–95%</strong></li>
+                    <li>Oudere atmosferische gasketel: <strong>75–85%</strong></li>
+                    <li>Stookolieketel: <strong>80–88%</strong> (condensatie) of 70–80% (oud)</li>
+                    <li>Pelletketel: <strong>75–85%</strong></li>
+                    <li>Elektrische weerstandverwarming: <strong>100%</strong> (bij definitie — maar duur per kWh)</li>
+                  </ul>
+                  <p>Een ketel met lager rendement betekent: u verbruikt meer brandstof voor dezelfde warmte. Een warmtepomp profiteert meer wanneer u een laag-rendement-ketel vervangt.</p>
+                  <p><a href="glossarium-warmtepomp.html#rendement">Volledig in het glossarium →</a></p>
+                </div>
+                <div class="calc-error" id="err-eta-space" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="fixed-costs-old">Vaste kosten per jaar (€) <span class="calc-optional">— optioneel</span></label>
+                <input type="number" id="fixed-costs-old" name="fixed_costs_old" min="0" max="2000" step="10" placeholder="leeg = standaard €340 voor gas">
+                <small class="calc-help">Abonnement + onderhoud + keuring. Vervalt grotendeels bij volledige overstap naar warmtepomp.</small>
+                <div class="calc-error" id="err-fixed-costs-old" hidden></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend>Nieuwe warmtepomp</legend>
+
+            <div class="calc-field">
+              <label for="hp-type">Type warmtepomp</label>
+              <select id="hp-type" name="hp_type" required>
+                <option value="lucht_lucht" selected>Lucht / lucht (zoals Daikin multisplit)</option>
+                <option value="lucht_water">Lucht / water (Daikin Altherma)</option>
+                <option value="hybride_lucht_water">Hybride (warmtepomp + bestaande gasketel)</option>
+                <option value="geothermisch">Geothermisch</option>
+              </select>
+              <small class="calc-help">Lucht-lucht = klassieke split/multisplit (woonkamer + slaapkamers). Lucht-water vervangt typisch uw centrale verwarmingsketel.</small>
+            </div>
+
+            <div class="calc-field calc-field--share">
+              <label for="hp-share">Aandeel van uw verwarming dat de warmtepomp overneemt
+                <button type="button" class="calc-info-btn" aria-label="Meer uitleg over aandeel-overname"
+                        aria-expanded="false" aria-controls="info-share" data-info-toggle>i</button>
+              </label>
+              <input type="range" id="hp-share" name="hp_share" min="0" max="100" step="5" value="40">
+              <div class="calc-range-value">
+                <strong><span id="hp-share-value">40</span>%</strong> van verwarming via warmtepomp
+                — <span id="hp-share-rest"><span id="hp-share-rest-value">60</span>% via bestaande verwarming</span>
+              </div>
+              <small class="calc-help" id="hp-share-help">Default voor lucht-lucht: ~40% (woonkamer + slaapkamers, badkamer en keuken blijven op gas).</small>
+              <div class="calc-info-panel" id="info-share" hidden>
+                <p>Niet elke warmtepomp neemt de volledige verwarming over. Het aandeel hangt af van het type en de opstelling:</p>
+                <ul>
+                  <li><strong>Lucht-water (vervanging gasketel)</strong> — typisch 100%. De warmtepomp doet alle verwarming + warm water; de gasketel wordt afgesloten.</li>
+                  <li><strong>Lucht-lucht (bij-verwarming)</strong> — typisch 30-50%. Split-units in de woonkamer en hoofdslaapkamer; badkamer, keuken en andere kamers blijven op de bestaande verwarming. Klant kiest waar de warmtepomp draait.</li>
+                  <li><strong>Hybride</strong> — typisch 85%. De warmtepomp draait op alle 'normale' dagen; bij -5°C of kouder springt de ketel bij.</li>
+                </ul>
+                <p>Hoe lager dit percentage, hoe minder besparing — maar ook hoe lager de investering. De jaarlijkse kost van het resterende deel wordt berekend met uw bestaande brandstof aan de huidige prijs.</p>
+              </div>
+            </div>
+
+            <div class="calc-field calc-field--toggle">
+              <label for="replaces-heating">Vervangt deze warmtepomp uw bestaande verwarming volledig?</label>
+              <div class="calc-toggle">
+                <input type="radio" id="replaces-yes" name="replaces_heating" value="yes">
+                <label for="replaces-yes">Ja — volledige vervanging (gasaansluiting weg)</label>
+                <input type="radio" id="replaces-no" name="replaces_heating" value="no" checked>
+                <label for="replaces-no">Nee — bestaande verwarming blijft (deels)</label>
+              </div>
+              <small class="calc-help">Bepaalt het btw-tarief (6% bij volledige vervanging, 21% anders) en of er vaste kosten van de oude installatie wegvallen.</small>
+            </div>
+
+            <div class="calc-extra" hidden>
+              <div class="calc-field">
+                <label for="spf-space">SPF ruimteverwarming <span class="calc-optional">— optioneel</span>
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over SPF"
+                          aria-expanded="false" aria-controls="info-spf" data-info-toggle>i</button>
+                </label>
+                <input type="number" id="spf-space" name="spf_space" min="1.5" max="6.0" step="0.1" placeholder="leeg = afleiden uit type">
+                <small class="calc-help">Jaarrendement. Default per type: lucht-lucht 3,5; lucht-water 3,8; hybride 3,5; geothermisch 4,2.</small>
+                <div class="calc-info-panel" id="info-spf" hidden>
+                  <p><strong>SPF</strong> (Seasonal Performance Factor) — soms ook SCOP — is het gemiddelde jaarrendement van uw warmtepomp.</p>
+                  <p>Een SPF van <strong>4,0</strong> betekent: 1 kWh elektriciteit → 4 kWh warmte. Dit is dé belangrijkste parameter voor uw stookkost — verwar het niet met COP (momentane meting op één punt, niet over een jaar).</p>
+                  <p>Realistische waarden voor moderne installaties:</p>
+                  <ul>
+                    <li>Lucht-water op <strong>vloerverwarming</strong>: 3,8–4,2</li>
+                    <li>Lucht-water op <strong>klassieke radiatoren</strong>: 2,8–3,3</li>
+                    <li>Geothermisch (bodem): 4,0–4,5</li>
+                    <li>Lucht-lucht: 3,2–3,8 (variabel afhankelijk van klimaat)</li>
+                  </ul>
+                  <p>De afgiftetemperatuur is de sleutelfactor: hoe lager u kunt stoken (vloerverwarming!), hoe beter de SPF.</p>
+                  <p><a href="glossarium-warmtepomp.html#spf">Volledig in het glossarium →</a></p>
+                </div>
+                <div class="calc-error" id="err-spf-space" hidden></div>
+              </div>
+
+              <div class="calc-field calc-field--checkbox">
+                <input type="checkbox" id="smart-steering" name="smart_steering">
+                <label for="smart-steering">Slimme sturing aanwezig (HEMS, dynamisch tarief, buffervat)
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over slimme sturing"
+                          aria-expanded="false" aria-controls="info-smart" data-info-toggle>i</button>
+                </label>
+                <small class="calc-help">Vermindert de extra piek door de warmtepomp met ~40% → lager capaciteitstarief.</small>
+                <div class="calc-info-panel" id="info-smart" hidden>
+                  <p><strong>Slimme sturing</strong> betekent dat uw warmtepomp niet zomaar aan- en uitspringt wanneer de thermostaat dat vraagt, maar gestuurd wordt op basis van: huidige piek op de meter, prijssignaal (bij dynamisch contract), beschikbare PV-stroom, en buffervat-capaciteit.</p>
+                  <p>Concrete vormen: een Home Energy Management System (HEMS), een groot buffervat dat 's nachts wordt opgeladen, een dynamisch elektriciteits­contract waarbij de wp draait wanneer stroom goedkoop is.</p>
+                  <p>Effect: maandpiek daalt met ~40%, wat tot honderden euro's per jaar minder capaciteitstarief kan opleveren bij een warmtepomp met hoog vermogen.</p>
+                </div>
+              </div>
+
+              <div class="calc-field calc-field--checkbox">
+                <input type="checkbox" id="cooling-enabled" name="cooling_enabled">
+                <label for="cooling-enabled">Koeling inbegrepen</label>
+                <small class="calc-help">Voor lucht-lucht standaard ja. Voor lucht-water alleen bij omkeerbare modellen.</small>
+              </div>
+
+              <div class="calc-field" id="cooling-demand-row" hidden>
+                <label for="cooling-demand">Verwachte koudevraag (kWh/jaar)</label>
+                <input type="number" id="cooling-demand" name="cooling_demand" min="0" max="20000" step="100" placeholder="bijv. 1500 voor halfopen rij in zomer">
+                <small class="calc-help">Indicatief: rijwoning ~500-1.000 kWh, halfopen ~1.000-2.000 kWh, open ~1.500-3.500 kWh per jaar.</small>
+                <div class="calc-error" id="err-cooling-demand" hidden></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset calc-fieldset--extras-only" hidden>
+            <legend>Prijzen <span class="calc-optional">(alleen uitgebreide modus)</span></legend>
+
+            <div class="calc-extra" hidden>
+              <div class="calc-field">
+                <label for="elec-price">Eigen elektriciteitsprijs (€/kWh)</label>
+                <input type="number" id="elec-price" name="elec_price" min="0.05" max="1.0" step="0.001" placeholder="leeg = standaard 0,33">
+                <small class="calc-help">All-in op uw jaarafrekening. Vlaams gemiddelde 2025: 0,33 €/kWh.</small>
+                <div class="calc-error" id="err-elec-price" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="gas-price">Eigen gas/brandstof prijs (€/kWh)</label>
+                <input type="number" id="gas-price" name="gas_price" min="0.02" max="0.50" step="0.001" placeholder="leeg = standaard 0,10">
+                <small class="calc-help">All-in op uw jaarafrekening. Vlaams gemiddelde 2026: 0,10 €/kWh.</small>
+                <div class="calc-error" id="err-gas-price" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="capacity-tariff">Capaciteitstarief (€/kW/jaar)
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over capaciteitstarief"
+                          aria-expanded="false" aria-controls="info-cap" data-info-toggle>i</button>
+                </label>
+                <input type="number" id="capacity-tariff" name="capacity_tariff" min="20" max="100" step="0.01" placeholder="leeg = Fluvius Midden-Vlaanderen 50,12">
+                <small class="calc-help">Standaard ingesteld op uw netbeheerder Fluvius Midden-Vlaanderen. Vlaams gemiddelde 53,39.</small>
+                <div class="calc-info-panel" id="info-cap" hidden>
+                  <p>Het <strong>capaciteitstarief</strong> is sinds 2023 een deel van de Vlaamse nettarieven. U betaalt niet alleen per kWh die u verbruikt, maar ook voor de <em>maximale</em> piek die u in een maand op het net trekt — uitgedrukt in kW.</p>
+                  <p><strong>Hoe het berekend wordt:</strong></p>
+                  <ul>
+                    <li>De netbeheerder meet uw verbruik per <strong>kwartier</strong>.</li>
+                    <li>De hoogste kwartierpiek van die maand = uw maandpiek.</li>
+                    <li>Uw jaartarief = gemiddelde van de 12 maandpieken × tarief (€/kW/jaar).</li>
+                    <li>Minimum: 2,5 kW (iedereen betaalt minstens dit bedrag).</li>
+                  </ul>
+                  <p><strong>Voor 2026 (Fluvius Midden-Vlaanderen — uw werkgebied):</strong> 50,12 €/kW/jaar excl. btw. Vlaams gemiddelde: 53,39 €/kW/jaar. Bron: VREG (laatst bijgewerkt 23 april 2026).</p>
+                  <p>Een warmtepomp verhoogt typisch de maandpiek met 1–2 kW. Slimme sturing kan dat halveren.</p>
+                  <p><a href="glossarium-warmtepomp.html#capaciteitstarief">Volledig in het glossarium →</a></p>
+                </div>
+                <div class="calc-error" id="err-capacity-tariff" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="pv-share">PV-zelfverbruik warmtepomp (%)
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over PV-zelfverbruik"
+                          aria-expanded="false" aria-controls="info-pv" data-info-toggle>i</button>
+                </label>
+                <input type="range" id="pv-share" name="pv_share" min="0" max="50" step="5" value="0">
+                <div class="calc-range-value"><span id="pv-share-value">0</span>% van wp-verbruik komt uit PV</div>
+                <small class="calc-help">Heeft u zonnepanelen? Schat in welk percentage van het warmtepomp-verbruik direct uit PV komt. Typisch 15-35%, met slimme sturing tot 55%.</small>
+                <div class="calc-info-panel" id="info-pv" hidden>
+                  <p><strong>Zelfverbruik</strong> is het deel van de PV-stroom dat u direct in uw woning gebruikt (en dus niet teruglevert aan het net). Voor de warmtepomp specifiek: hoeveel van de uren dat de wp draait, samenvalt met momenten van PV-productie.</p>
+                  <p>Effectieve elektriciteitsprijs daalt: in plaats van de volle netprijs (0,33 €/kWh) betaalt u voor het PV-deel alleen het verschil met de injectievergoeding (meestal 0,03–0,06 €/kWh).</p>
+                  <p>Typische zelfverbruiks-fracties voor warmtepomp:</p>
+                  <ul>
+                    <li><strong>Standaard PV zonder sturing</strong>: 15–25% (wp draait vooral 's avonds/'s nachts in winter)</li>
+                    <li><strong>Met buffervat + dagsturing</strong>: 25–40% (wp wordt 's middags getriggerd om buffervat op te laden)</li>
+                    <li><strong>Met HEMS + dynamisch tarief</strong>: 35–55% (geoptimaliseerd op productie + Belpex-prijs)</li>
+                  </ul>
+                  <p>v1-aanname: vereenvoudigde slider. Voor uw precieze situatie hebben we PV-installatie­gegevens nodig (kWp, oriëntatie, hellingshoek) — daar kunnen we tijdens het plaatsbezoek doorheen.</p>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset calc-fieldset--extras-only" hidden>
+            <legend>Investering <span class="calc-optional">(alleen uitgebreide modus)</span></legend>
+
+            <div class="calc-extra" hidden>
+              <div class="calc-field">
+                <label for="gross-cost">Bruto kost warmtepomp excl. btw (€)</label>
+                <input type="number" id="gross-cost" name="gross_cost" min="2000" max="80000" step="100" placeholder="leeg = afleiden uit type">
+                <small class="calc-help">Default per type: lucht-lucht €7.000; lucht-water €16.000; hybride €10.000; geothermisch €28.000. Vraag uw installateur voor uw concrete offerte.</small>
+                <div class="calc-error" id="err-gross-cost" hidden></div>
+              </div>
+
+              <div class="calc-field">
+                <label for="avoided-cost">Vermeden kost alternatief (€)
+                  <button type="button" class="calc-info-btn" aria-label="Meer uitleg over vermeden kost"
+                          aria-expanded="false" aria-controls="info-avoided" data-info-toggle>i</button>
+                </label>
+                <input type="number" id="avoided-cost" name="avoided_cost" min="0" max="20000" step="100" placeholder="leeg = afleiden uit brandstof">
+                <small class="calc-help">Wat het zou kosten om uw oude ketel/installatie te vervangen door een gelijkwaardige fossiele variant. Default: gas €5.000, mazout €6.500, pellets €8.000.</small>
+                <div class="calc-info-panel" id="info-avoided" hidden>
+                  <p>De <strong>vermeden kost</strong> is een sleutelconcept dat warmtepompen <em>veel</em> aantrekkelijker maakt dan ze in een naïeve berekening lijken.</p>
+                  <p><strong>De redenering:</strong> als uw oude gas- of mazoutketel sowieso aan het einde van zijn leven is (15–20 jaar oud), zou u <em>toch</em> een nieuwe ketel moeten kopen. De vergelijking is dus niet "warmtepomp vs. niets doen", maar "warmtepomp vs. nieuwe ketel".</p>
+                  <p>De calculator gebruikt twee terugverdientijden:</p>
+                  <ul>
+                    <li><strong>Cash-out terugverdientijd</strong> = volledige factuur / besparing/jaar — relevant als uw huidige ketel nog jaren mee kan.</li>
+                    <li><strong>Incrementele terugverdientijd</strong> = (volledige factuur − vermeden kost nieuwe ketel) / besparing/jaar — de eerlijke vergelijking als de ketel sowieso vervangen moet worden.</li>
+                  </ul>
+                  <p>Default-waarden zijn realistische schattingen voor een complete vervangings­installatie incl. plaatsing. Voor uw concrete offerte: vraag uw installateur.</p>
+                  <p><a href="glossarium-warmtepomp.html#incrementele-methode">Volledig in het glossarium →</a></p>
+                </div>
+                <div class="calc-error" id="err-avoided-cost" hidden></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="calc-fieldset">
+            <legend>Scenario</legend>
+            <div class="calc-field">
+              <label for="scenario">Hoe voorzichtig wilt u rekenen?</label>
+              <input type="range" id="scenario" name="scenario" min="0" max="2" step="1" value="1" list="scenario-ticks">
+              <datalist id="scenario-ticks">
+                <option value="0" label="Voorzichtig"></option>
+                <option value="1" label="Realistisch"></option>
+                <option value="2" label="Optimistisch"></option>
+              </datalist>
+              <div class="calc-scenario-labels" aria-hidden="true">
+                <span>Voorzichtig</span><span>Realistisch</span><span>Optimistisch</span>
+              </div>
+              <small class="calc-help" id="scenario-help">Realistisch — Vlaamse gemiddeldes 2026.</small>
+            </div>
+          </fieldset>
+
+          <p class="calc-disclaimer">
+            <strong>Operationele kost-vergelijking.</strong> Premies vallen buiten de berekening — zie investeringsperspectief.
+            Defaults zijn herzienbaar via de uitgebreide modus.
+            Tarieven herzien op <time datetime="2026-05-25">25 mei 2026</time>.
+          </p>
+        </form>
+
+        <!-- Resultaten (right column op desktop) -->
+        <aside class="calc-results" id="calc-results" aria-live="polite" aria-atomic="false">
+
+          <!-- HOOFD-KPI's — jaarkost vergelijking + CO₂ -->
+          <div class="calc-kpis calc-kpis--hero" id="calc-kpis-hero">
+            <!-- gevuld door view.js: jaarkost-huidig, jaarkost-WP, jaarbesparing, CO₂-besparing -->
+          </div>
+
+          <!-- HOOFD-GRAFIEK — bar-comparison Huidig vs Met WP -->
+          <div class="calc-chart-wrap">
+            <h3 class="calc-h3">Jaarlijkse verwarmingskost — vergelijking</h3>
+            <div id="calc-comparison-chart" class="calc-chart" role="img" aria-label="Staafdiagram van jaarkost huidig versus met warmtepomp">
+              <!-- SVG gevuld door view.js -->
+            </div>
+            <p class="calc-chart-sub">Realistisch scenario — Vlaamse gemiddelden mei 2026. Het scenario "voorzichtig/optimistisch" past de cijfers ±10-15% aan.</p>
+          </div>
+
+          <!-- SECUNDAIRE GRAFIEK — cumulatieve besparing 10 jaar -->
+          <div class="calc-chart-wrap">
+            <h3 class="calc-h3">Cumulatieve besparing over 10 jaar</h3>
+            <div id="calc-cumulative-chart" class="calc-chart" role="img" aria-label="Grafiek van cumulatieve operationele besparing over 10 jaar">
+              <!-- SVG gevuld door view.js -->
+            </div>
+            <p class="calc-chart-sub">Som van jaarlijkse besparingen, met geprojecteerde escalatie van gas- en elektriciteitsprijzen.</p>
+          </div>
+
+          <!-- CO₂ + comfort cards -->
+          <div class="calc-cards" id="calc-cards">
+            <!-- gevuld door view.js -->
+          </div>
+
+          <!-- Waarschuwingen -->
+          <div id="calc-warnings" class="calc-warnings" role="status">
+            <!-- gevuld door view.js -->
+          </div>
+
+          <!-- Print + CTA -->
+          <div class="calc-results-actions">
+            <button type="button" class="btn btn--outline btn--sm" id="print-results" aria-label="Print of bewaar dit resultaat als PDF">
+              <span aria-hidden="true">🖨</span> Print of bewaar als PDF
+            </button>
+          </div>
+
+          <div class="calc-cta">
+            <h3 class="calc-h3">Een persoonlijke berekening op uw woning?</h3>
+            <p>Tijdens een vrijblijvend plaatsbezoek bekijken we uw woning, isolatie en bestaande installatie. We rekenen door op uw concrete situatie en helpen met de premie-aanvraag.</p>
+            <div class="btn-group">
+              <a href="contact.html?bron=calculator" class="btn btn--primary btn--lg" id="cta-offerte">Vraag een vrijblijvend plaatsbezoek aan</a>
+            </div>
+          </div>
+
+          <!-- INVESTERINGSPERSPECTIEF — collapsed by default -->
+          <details class="calc-collapsible" id="calc-investment-details">
+            <summary class="calc-collapsible-summary">
+              <span class="calc-collapsible-icon" aria-hidden="true">💰</span>
+              <span class="calc-collapsible-title">Investeringsperspectief — terugverdientijd, NPV en bruto kosten</span>
+              <span class="calc-collapsible-chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div class="calc-collapsible-body">
+
+              <p class="calc-collapsible-intro">Bovenstaande resultaten focussen op de <strong>operationele kost</strong>. Hieronder vindt u de klassieke financiële analyse: hoeveel kost de installatie, in hoeveel jaar verdient ze zichzelf terug, en wat is de netto contante waarde over 15 jaar.</p>
+
+              <!-- Premie-footnote — verhuisd naar investeringsperspectief -->
+              <div class="calc-premie-footnote" role="note">
+                <span class="calc-premie-icon" aria-hidden="true">💡</span>
+                <div>
+                  <p><strong>Premies zijn niet meegeteld in deze terugverdientijd.</strong></p>
+                  <p>Afhankelijk van uw inkomenscategorie, het type warmtepomp en de aanvraagdatum kan de Vlaamse overheid een premie van <strong>€300 tot €9.600</strong> uitbetalen (Mijn VerbouwPremie). Dit verlaagt uw netto investering en dus uw terugverdientijd. Voor uw concrete situatie —
+                    <a href="https://www.vlaanderen.be/premies-voor-renovatie/mijn-verbouwpremie" id="premie-link" target="_blank" rel="noopener noreferrer">bekijk de officiële simulator op vlaanderen.be →</a>
+                  </p>
+                </div>
+              </div>
+
+              <!-- TVT/NPV KPI's -->
+              <div class="calc-kpis" id="calc-kpis-investment">
+                <!-- gevuld door view.js: TVT cash, TVT incrementeel, NPV15 -->
+              </div>
+
+              <!-- Cumulatieve cashflow over 20 jaar incl. investering -->
+              <div class="calc-chart-wrap">
+                <h3 class="calc-h3">Cumulatieve cashflow over 20 jaar (incl. investering)</h3>
+                <div id="calc-cashflow-chart" class="calc-chart" role="img" aria-label="Grafiek van cumulatieve cashflow over 20 jaar voor drie scenario's">
+                  <!-- SVG gevuld door view.js -->
+                </div>
+                <p class="calc-chart-sub">Negatief in jaar 0 (investering), passeert nul op het moment van terugverdienen, blijft daarna stijgen.</p>
+              </div>
+
+              <!-- Tabel oud vs nieuw -->
+              <div class="calc-cost-wrap">
+                <h3 class="calc-h3">Jaarlijkse kost — detail</h3>
+                <div id="calc-costs" class="calc-costs">
+                  <!-- gevuld door view.js -->
+                </div>
+              </div>
+
+              <p class="calc-collapsible-note"><strong>Tip:</strong> de bruto kost en vermeden vervangingskost zijn aanpasbaar in de <em>uitgebreide modus</em> (knop bovenaan het formulier).</p>
+            </div>
+          </details>
+
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Hoe lees ik mijn jaarafrekening -->
+  <section class="section section--gray">
+    <div class="container content-narrow">
+      <h2>Hoe lees ik mijn jaarafrekening?</h2>
+      <p>Voor de meest accurate berekening voert u best uw eigen cijfers in (uitgebreide modus). Hieronder waar u die op uw jaarafrekening vindt — voorbeelden voor de meest voorkomende leveranciers (Luminus, Engie, TotalEnergies, Eneco).</p>
+
+      <div class="factuur-guide">
+        <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schematische illustratie van een jaarafrekening met annotaties" class="factuur-svg">
+          <rect x="20" y="20" width="560" height="200" rx="8" fill="#fff" stroke="#dee2e6" stroke-width="2"/>
+
+          <text x="40" y="50" font-size="14" font-weight="700" fill="#3a3a3a">Jaarafrekening — Voorbeeld</text>
+          <line x1="40" y1="58" x2="380" y2="58" stroke="#dee2e6"/>
+
+          <text x="40" y="82" font-size="12" fill="#5e5e5e">Periode</text>
+          <text x="180" y="82" font-size="12" fill="#3a3a3a">01/05/2025 — 30/04/2026</text>
+
+          <text x="40" y="105" font-size="12" fill="#5e5e5e">Verbruik aardgas</text>
+          <text x="180" y="105" font-size="12" font-weight="700" fill="#3a3a3a">1.480 m³ = </text>
+          <text x="252" y="105" font-size="12" font-weight="700" fill="#54d2eb">17.020 kWh</text>
+          <circle cx="395" cy="100" r="12" fill="#54d2eb"/>
+          <text x="395" y="105" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+
+          <text x="40" y="128" font-size="12" fill="#5e5e5e">Eenheidsprijs gas (all-in)</text>
+          <text x="180" y="128" font-size="12" font-weight="700" fill="#54d2eb">0,1043 €/kWh</text>
+          <circle cx="395" cy="123" r="12" fill="#54d2eb"/>
+          <text x="395" y="128" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+
+          <text x="40" y="151" font-size="12" fill="#5e5e5e">Eenheidsprijs elek (all-in)</text>
+          <text x="180" y="151" font-size="12" font-weight="700" fill="#54d2eb">0,3317 €/kWh</text>
+          <circle cx="395" cy="146" r="12" fill="#54d2eb"/>
+          <text x="395" y="151" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+
+          <text x="40" y="174" font-size="12" fill="#5e5e5e">Capaciteitstarief</text>
+          <text x="180" y="174" font-size="12" font-weight="700" fill="#54d2eb">4,12 kW × 50,12 €/kW</text>
+          <circle cx="395" cy="169" r="12" fill="#54d2eb"/>
+          <text x="395" y="174" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+
+          <text x="40" y="197" font-size="12" fill="#5e5e5e">Totaal</text>
+          <text x="180" y="197" font-size="12" font-weight="700" fill="#3a3a3a">€ 3.740,15</text>
+        </svg>
+
+        <ol class="factuur-list">
+          <li><strong>Jaarverbruik</strong> — Op uw factuur staat dit in kWh (en/of m³ voor gas, liter voor mazout). Gebruik de <em>kWh-waarde</em> in onze calculator. Voor m³ doet uw leverancier de omrekening voor u — staat als "× calorische bovenwaarde" of vergelijkbaar.</li>
+          <li><strong>Gas-eenheidsprijs</strong> — Soms "all-in", soms gesplitst in energiecomponent + nettarieven + heffingen + btw. Gebruik het <em>all-in</em> cijfer (totale jaarprijs ÷ totaal verbruik). Onze default 0,10 €/kWh is het Vlaams gemiddelde voor mei 2026.</li>
+          <li><strong>Elektriciteit-eenheidsprijs</strong> — Idem. Onze default 0,33 €/kWh is het Vlaams gemiddelde. Heeft u een dynamisch contract? Vraag uw leverancier om de jaargemiddelde eenheidsprijs van het afgelopen jaar.</li>
+          <li><strong>Capaciteitstarief</strong> — Sinds 2023 vermeld op uw elektriciteitsfactuur. Uw gemiddelde maandpiek staat ook in <a href="https://mijn.fluvius.be" target="_blank" rel="noopener noreferrer">Mijn Fluvius</a>. Default in onze calculator: Fluvius Midden-Vlaanderen-tarief.</li>
+        </ol>
+
+        <p class="factuur-help"><strong>Geen jaarafrekening bij de hand?</strong> Doe de <a href="https://www.vlaamsenutsregulator.be/elektriciteit-en-aardgas/energiecontracten-en-leveranciers/doe-de-v-testr" target="_blank" rel="noopener noreferrer">V-test</a> — die toont uw actuele prijzen en laat zien of u kan besparen door van contract te veranderen. Of <a href="contact.html">vraag ons om mee te kijken</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toelichting onderaan -->
+  <section class="section">
+    <div class="container content-narrow">
+      <h2>Hoe deze calculator werkt</h2>
+      <p>De berekening vergelijkt uw <strong>jaarlijkse operationele kost</strong> in twee situaties:</p>
+      <ul>
+        <li><strong>Huidig</strong>: brandstof × eenheidsprijs + vaste kosten (abonnement, onderhoud, keuring).</li>
+        <li><strong>Met warmtepomp</strong>: elektriciteit voor de warmtepomp (nuttige warmte / SPF) × elektriciteitsprijs + eventueel resterende brandstof als de warmtepomp niet alles overneemt + capaciteitstarief-toename + nieuwe vaste kosten.</li>
+      </ul>
+      <p>Bronnen voor de defaults (Vlaamse marktcijfers mei 2026):</p>
+      <ul>
+        <li><strong>Elektriciteitsprijs 0,33 €/kWh</strong> — Vlaams gemiddelde voor een 3.500 kWh-gezin (VREG, november 2025).</li>
+        <li><strong>Gasprijs 0,10 €/kWh</strong> — Vlaams gemiddelde voor een 17.000 kWh-gezin (VREG, april 2026).</li>
+        <li><strong>Capaciteitstarief 50,12 €/kW/jaar</strong> — Fluvius Midden-Vlaanderen (uw werkgebied), excl. btw.</li>
+        <li><strong>SPF</strong> — typische jaarprestatie per warmtepomp-type: lucht-lucht 3,5; lucht-water 3,8; geothermisch 4,2; hybride 3,5.</li>
+        <li><strong>CO₂-emissiefactoren</strong> — aardgas 0,202 (CNC-NKC), elektriciteit BE residuele mix 0,132 (AIB 2024 via VREG), mazout 0,267 (VEKA-VMM), pellets 0,040 LCA (VITO).</li>
+      </ul>
+      <p>Het scenario <em>voorzichtig</em> gebruikt iets hogere elektriciteitsprijzen en lagere SPF (-10%); <em>optimistisch</em> het omgekeerde (+10% SPF, lagere effectieve elek-prijs). Dat geeft een eerlijke bandbreedte rond de realistische schatting.</p>
+      <p>Voor wie ook de <strong>investeringsterugverdientijd</strong> wil zien (bruto kost, BTW, NPV over 15 jaar) — de details staan in de uitklapbare sectie <em>"Investeringsperspectief"</em> onderaan het resultaat. Premies vallen daar nog steeds buiten de berekening — daarvoor verwijzen we naar de <a href="https://www.vlaanderen.be/premies-voor-renovatie/mijn-verbouwpremie" target="_blank" rel="noopener noreferrer">officiële Mijn VerbouwPremie-simulator</a>.</p>
+    </div>
+  </section>
+
+  <!-- CTA-section onderaan -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Wilt u zekerheid over uw concrete situatie?</h2>
+      <p>Een calculator geeft een goede eerste indicatie. Maar voor de werkelijke offerte moeten we uw woning, isolatie en bestaande installatie ter plaatse beoordelen. Geen offerte zonder plaatsbezoek — dat is hoe we eerlijke advies geven.</p>
+      <div class="btn-group">
+        <a href="contact.html?bron=calculator" class="btn btn--white btn--lg">Vraag een vrijblijvend plaatsbezoek aan</a>
+        <a href="tel:+32472657647" class="btn btn--outline">Bel +32 472 65 76 47</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a href="index.html" class="logo"><img src="images/logo.png" alt="AVYclima" width="193" height="74" loading="eager" decoding="async"></a>
+        <p>Daikin-specialist voor airco's en warmtepompen in Aalst, Denderleeuw en Ninove. Advies, plaatsing, onderhoud en herstellingen.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Diensten</h4>
+        <a href="airco.html">Airconditioning</a>
+        <a href="warmtepomp.html">Warmtepompen</a>
+        <a href="onderhoud.html">Onderhoud</a>
+        <a href="glossarium-warmtepomp.html">Glossarium warmtepomp</a>
+        <a href="contact.html">Offerte aanvragen</a>
+      </div>
+      <div class="footer-links">
+        <h4>Informatie</h4>
+        <a href="over-ons.html">Over ons</a>
+        <a href="portfolio.html">Aanpak</a>
+        <a href="faq.html">Veelgestelde vragen</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>📍 Denderleeuw, België</p>
+        <p>📞 <a href="tel:+32472657647">+32 472 65 76 47</a></p>
+        <p>✉️ <a href="mailto:info@avyclima.be">info@avyclima.be</a></p>
+        <p>🕐 Ma-Vr: 8:00-18:00, Za: 9:00-13:00</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 AVYclima. Alle rechten voorbehouden.</p>
+      <a href="privacy.html">Privacybeleid</a>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner">
+  <div class="cookie-inner">
+    <p>Deze website gebruikt cookies om uw ervaring te verbeteren. <a href="privacy.html">Meer info</a></p>
+    <div class="cookie-buttons">
+      <button class="btn btn--sm cookie-reject">Weigeren</button>
+      <button class="btn btn--sm btn--primary cookie-accept">Accepteren</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js" defer></script>
+<script type="module" src="js/terugverdientijd.js"></script>
+
+</body>
+</html>

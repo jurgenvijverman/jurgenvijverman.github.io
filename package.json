@@ -1,0 +1,14 @@
+{
+  "name": "avyclima",
+  "version": "1.0.0",
+  "description": "AVYclima — Daikin specialist voor airco en warmtepompen in Aalst, Denderleeuw en Ninove. Pure HTML + vanilla JS site, GitHub Pages.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/test-terugverdientijd.mjs",
+    "qa": "python3 scripts/site_qa.py"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
