@@ -141,10 +141,10 @@
           <h2>Offerte aanvragen</h2>
           <p>Vul het formulier in. We nemen contact op om uw vraag te verduidelijken en plannen indien nodig een plaatsbezoek. Daarna ontvangt u een duidelijke offerte op maat.</p>
 
-          <!-- Calculator-samenvatting (alleen zichtbaar bij ?bron=calculator) -->
+          <!-- Calculator-samenvatting (alleen zichtbaar bij ?bron=calculator; standaard verborgen via hidden-attribuut + JS unhide) -->
           <div class="calc-prefill-summary" id="calc-prefill-summary" hidden>
-            <h3>Aanvraag komt vanuit terugverdientijd-calculator</h3>
-            <p>De volgende gegevens uit de calculator worden meegestuurd. Pas ze aan indien nodig in het formulier hieronder.</p>
+            <h3>Uw gegevens uit de terugverdientijd-berekening</h3>
+            <p>We sturen deze gegevens uit uw berekening mee zodat we uw aanvraag sneller kunnen voorbereiden. U kunt ze in het formulier hieronder aanpassen als iets niet klopt.</p>
             <dl id="calc-prefill-list"></dl>
           </div>
 
@@ -364,15 +364,16 @@
   <!-- Map Section -->
   <section class="section section--gray">
     <div class="container">
-      <h2>Locatie</h2>
-      <div class="map-container" style="height: 400px; border-radius: var(--border-radius); overflow: hidden;">
+      <h2>Locatie en werkgebied</h2>
+      <p>AVYclima is gevestigd in Denderleeuw (9472), centraal in de regio. Vanuit deze uitvalsbasis bedienen we klanten in <strong>Aalst</strong>, <strong>Denderleeuw</strong>, <strong>Ninove</strong> en omliggende gemeenten zoals Haaltert, Lede, Erpe-Mere en Dendermonde. Voor elke offerte plannen we een kort plaatsbezoek bij u thuis — meestal binnen één of twee weken na uw aanvraag. Bekijk ons volledige <a href="werkgebied.html">werkgebied</a> voor een overzicht per gemeente.</p>
+      <div class="map-container" style="height: 400px; border-radius: var(--border-radius); overflow: hidden; margin-top: 1.5rem;">
         <iframe
           src="https://www.openstreetmap.org/export/embed.html?bbox=3.85%2C50.87%2C4.20%2C50.97&layer=mapnik&marker=50.9281%2C4.0677"
           width="100%"
           height="400"
           style="border: 0; display: block;"
           loading="lazy"
-          title="Locatie AVYclima in Denderleeuw"
+          title="Kaart met de ligging van AVYclima in Denderleeuw en omgeving (Aalst, Ninove)"
           referrerpolicy="no-referrer-when-downgrade">
         </iframe>
       </div>
