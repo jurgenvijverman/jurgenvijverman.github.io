@@ -5,22 +5,51 @@
 document.addEventListener('DOMContentLoaded', function () {
 
   // --- Mobile Navigation Toggle ---
+  // Robuuste scroll-lock: op iOS Safari werkt `overflow: hidden` op body niet
+  // betrouwbaar; daarom maken we de body fixed en bewaren scrollpositie.
   const navToggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.nav');
+  let savedScrollY = 0;
+
+  function lockBodyScroll() {
+    savedScrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + savedScrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+  function unlockBodyScroll(restoreScroll) {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    if (restoreScroll) window.scrollTo(0, savedScrollY);
+  }
 
   if (navToggle && nav) {
     navToggle.addEventListener('click', function () {
+      var willOpen = !nav.classList.contains('active');
       navToggle.classList.toggle('active');
       nav.classList.toggle('active');
-      document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+      navToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+
+      if (willOpen) {
+        lockBodyScroll();
+      } else {
+        unlockBodyScroll(true);
+      }
     });
 
-    // Close nav when clicking a link
+    // Sluiten via een nav-link: scroll-lock vrijgeven zonder de scrollpositie
+    // te herstellen (de bezoeker navigeert vaak naar een andere pagina/anchor).
     nav.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         navToggle.classList.remove('active');
         nav.classList.remove('active');
-        document.body.style.overflow = '';
+        navToggle.setAttribute('aria-expanded', 'false');
+        unlockBodyScroll(false);
       });
     });
   }
@@ -328,5 +357,36 @@ document.addEventListener('DOMContentLoaded', function () {
   // target) — not here on raw form submit. That prevents false positives from
   // validation failures, network errors, or abandoned submissions, and keeps
   // conversion attribution to a single, dedicated thank-you URL.
+
+  // --- Brede tabellen automatisch in een scrollwrap zetten (mobiel) ---
+  // Vermijdt dat .comparison-table de viewport overschrijdt op smalle schermen.
+  document.querySelectorAll('.comparison-table').forEach(function (table) {
+    if (table.parentElement.classList.contains('table-scroll')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'table-scroll';
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
+  });
+
+  // --- Back-to-top knop ---
+  // Toont een 'naar boven'-knop nadat de bezoeker 600px heeft gescrold.
+  var backToTop = document.createElement('button');
+  backToTop.className = 'back-to-top';
+  backToTop.type = 'button';
+  backToTop.setAttribute('aria-label', 'Terug naar boven');
+  backToTop.innerHTML = '<span aria-hidden="true">↑</span>';
+  document.body.appendChild(backToTop);
+
+  backToTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 600) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }, { passive: true });
 
 });
