@@ -1548,13 +1548,13 @@ body.hero-over-ons .page-hero {
     left: 0;
     right: 0;
     bottom: 0;
-    /* Defensieve achtergrond: expliciete kleur i.p.v. shorthand,
-       zodat iOS Safari hem ook respecteert binnen header's backdrop-filter context */
+    /* Defensieve achtergrond: expliciete kleur i.p.v. shorthand */
     background-color: #ffffff;
     background-image: none;
-    /* Eigen stacking context, los van header's backdrop-filter */
-    z-index: 999;
-    isolation: isolate;
+    /* Hoge z-index — JS verhuist de nav bij open naar document.body
+       zodat hij gegarandeerd in de root stacking context staat,
+       los van header's backdrop-filter. */
+    z-index: 1100;
     flex-direction: column;
     padding: 2rem;
     gap: 0.5rem;
@@ -1563,7 +1563,6 @@ body.hero-over-ons .page-hero {
     border-top: 1px solid var(--gray-200);
     /* Scrollbaar als menu groter is dan viewport */
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .nav.active {

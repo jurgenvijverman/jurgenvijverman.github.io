@@ -5,11 +5,17 @@
 document.addEventListener('DOMContentLoaded', function () {
 
   // --- Mobile Navigation Toggle ---
-  // Robuuste scroll-lock: op iOS Safari werkt `overflow: hidden` op body niet
-  // betrouwbaar; daarom maken we de body fixed en bewaren scrollpositie.
+  // Het mobiele menu (.nav) zit in de DOM binnen de <header>, en die header
+  // heeft `position: fixed` + `z-index: 1000` + `backdrop-filter`. Op iOS
+  // Safari leidt dat tot stacking- en transparantie-bugs op het kindelement.
+  // Oplossing: bij open verhuizen we de nav tijdelijk naar <body> via een
+  // "portal", zodat hij gegarandeerd in de root stacking context renderingt
+  // met een eigen, dichte achtergrond. Bij sluiten gaat hij terug.
   const navToggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.nav');
   let savedScrollY = 0;
+  let navOriginalParent = null;
+  let navOriginalNextSibling = null;
 
   function lockBodyScroll() {
     savedScrollY = window.scrollY;
@@ -28,17 +34,40 @@ document.addEventListener('DOMContentLoaded', function () {
     if (restoreScroll) window.scrollTo(0, savedScrollY);
   }
 
+  function openMenu() {
+    // Onthoud originele plek in de DOM zodat we hem netjes kunnen terugzetten
+    if (!navOriginalParent) {
+      navOriginalParent = nav.parentNode;
+      navOriginalNextSibling = nav.nextSibling;
+    }
+    // Verhuis de nav naar <body> — escapeert header's stacking context
+    document.body.appendChild(nav);
+    nav.classList.add('active');
+    navToggle.classList.add('active');
+    navToggle.setAttribute('aria-expanded', 'true');
+    lockBodyScroll();
+  }
+
+  function closeMenu(restoreScroll) {
+    nav.classList.remove('active');
+    navToggle.classList.remove('active');
+    navToggle.setAttribute('aria-expanded', 'false');
+    unlockBodyScroll(restoreScroll);
+    // Wacht op de slide-out transitie voor we hem terug in de header zetten,
+    // zodat de gebruiker geen "spring"-effect ziet.
+    window.setTimeout(function () {
+      if (navOriginalParent && !nav.classList.contains('active')) {
+        navOriginalParent.insertBefore(nav, navOriginalNextSibling);
+      }
+    }, 350);
+  }
+
   if (navToggle && nav) {
     navToggle.addEventListener('click', function () {
-      var willOpen = !nav.classList.contains('active');
-      navToggle.classList.toggle('active');
-      nav.classList.toggle('active');
-      navToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-
-      if (willOpen) {
-        lockBodyScroll();
+      if (nav.classList.contains('active')) {
+        closeMenu(true);
       } else {
-        unlockBodyScroll(true);
+        openMenu();
       }
     });
 
@@ -46,10 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // te herstellen (de bezoeker navigeert vaak naar een andere pagina/anchor).
     nav.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
-        navToggle.classList.remove('active');
-        nav.classList.remove('active');
-        navToggle.setAttribute('aria-expanded', 'false');
-        unlockBodyScroll(false);
+        closeMenu(false);
       });
     });
   }
